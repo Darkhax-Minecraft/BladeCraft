@@ -31,17 +31,23 @@ public class RenderItemHelper {
         mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(stack.getItemSpriteNumber()));
         Tessellator tessellator = Tessellator.instance;
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        float f6 = 1F;
-        GL11.glScalef(f6, f6, f6);
+        
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
-
+        float f6 = 1F;
+        
         if(isEntity) {
 
             GL11.glTranslatef(-0.5f, -0.2f, 0f);
+            GL11.glScalef(f6+1, f6+1, f6+1);
+        }
+        
+        else {
+        	
+        	GL11.glScalef(f6, f6, f6);
         }
 
         ItemRenderer.renderItemIn2D(tessellator, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
