@@ -5,12 +5,14 @@ import java.util.Arrays;
 
 import net.darkhax.bladecraft.block.Blocks;
 import net.darkhax.bladecraft.command.CommandSetColor;
+import net.darkhax.bladecraft.handler.RecipeHandler;
 import net.darkhax.bladecraft.lib.Config;
 import net.darkhax.bladecraft.lib.Reference;
 import net.darkhax.bladecraft.proxy.CommonProxy;
 import net.darkhax.bladecraft.tileentity.TileEntityColoranator;
 import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -46,6 +48,7 @@ public class BladeCraft {
 		GameRegistry.addRecipe(new ItemStack(Blocks.coloranatorBlock), new Object[]{"X", 'X', Block.dirt});
 		
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
+		RecipeHandler.createRecipeWithSwords(new ItemStack(Item.dyePowder.itemID, 1, 0));
 	}
 
 	@EventHandler
