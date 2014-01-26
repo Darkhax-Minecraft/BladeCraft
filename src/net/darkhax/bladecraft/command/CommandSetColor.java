@@ -45,9 +45,9 @@ public class CommandSetColor extends CommandBase {
 
 				if (isValidHexColor(cmdArgs[1])) {
 					if (cmdArgs[0].equals("i"))
-						itemstack.getTagCompound().setInteger(Reference.INSET_HEX_NBT_KEY, Integer.parseInt(cmdArgs[1]));
+						itemstack.getTagCompound().setInteger(Reference.INSET_HEX_NBT_KEY, Integer.decode(cmdArgs[1]));
 					else if (cmdArgs[0].equals("c"))
-						itemstack.getTagCompound().setInteger(Reference.COLOR_HEX_NBT_KEY, Integer.parseInt(cmdArgs[1]));
+						itemstack.getTagCompound().setInteger(Reference.COLOR_HEX_NBT_KEY, Integer.decode(cmdArgs[1]));
 					else
 						throw new WrongUsageException(Reference.SETCOLOR_COMMANDUSAGE_KEY, new Object[0]);
 				}
