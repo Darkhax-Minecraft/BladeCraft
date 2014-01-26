@@ -6,6 +6,7 @@ import net.darkhax.bladecraft.BladeCraft;
 import net.darkhax.bladecraft.lib.Reference;
 import net.darkhax.bladecraft.tileentity.TileEntityColoranator;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,10 +20,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockColoranator extends Block {
+public class BlockColoranator extends BlockContainer {
 
 	private Random rand = new Random();
 
@@ -97,8 +99,10 @@ public class BlockColoranator extends Block {
 		}
 		else {
 			TileEntityColoranator tileentitycoloranator = (TileEntityColoranator) world.getBlockTileEntity(x, y, z);
-
-			if (tileentitycoloranator != null) {
+			
+			FMLLog.severe(tileentitycoloranator.toString());
+			if (tileentitycoloranator != null)
+			{
 				entityPlayer.openGui(BladeCraft.instance, Reference.COLORANATOR_GUI_ID, world, x, y, z);
 			}
 
@@ -120,6 +124,7 @@ public class BlockColoranator extends Block {
 
 	public TileEntity createNewTileEntity(World world) {
 
+		FMLLog.severe("Creating TileEntity");
 		return new TileEntityColoranator();
 	}
 

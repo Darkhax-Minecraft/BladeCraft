@@ -8,7 +8,10 @@ import net.darkhax.bladecraft.command.CommandSetColor;
 import net.darkhax.bladecraft.lib.Config;
 import net.darkhax.bladecraft.lib.Reference;
 import net.darkhax.bladecraft.proxy.CommonProxy;
+import net.darkhax.bladecraft.tileentity.TileEntityColoranator;
+import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModMetadata;
@@ -17,6 +20,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -37,11 +42,15 @@ public class BladeCraft {
 		config.init();
 
 		new Blocks();
+		GameRegistry.registerTileEntity(TileEntityColoranator.class, "teColoranator");
+		GameRegistry.addRecipe(new ItemStack(Blocks.coloranatorBlock), new Object[]{"X", 'X', Block.dirt});
+		
+		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
+		
 	}
 
 	@EventHandler
