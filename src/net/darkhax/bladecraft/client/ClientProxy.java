@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 
-	public static void registerItemRenders() {
+	public void registerItemRenders() {
 		
 		MinecraftForgeClient.registerItemRenderer(Item.swordDiamond.itemID, new RenderItemSword());
 		MinecraftForge.EVENT_BUS.register(new ItemIconHandler());

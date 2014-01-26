@@ -9,30 +9,33 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 
-public class CommonProxy implements IGuiHandler
-{
-	public static void registerItemRenders() {
-		
+public class CommonProxy implements IGuiHandler {
+	
+	public void registerItemRenders() {
+
 	}
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
-	{
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te != null)
-		{
-			switch(ID)
-			{
-			case Reference.COLORANATOR_GUI_ID: 
-				return new ContainerColoranator(player.inventory, (TileEntityColoranator)te);
+		
+		if (te != null) {
+			
+			switch (ID) {
+			
+			case Reference.COLORANATOR_GUI_ID:
+				
+				return new ContainerColoranator(player.inventory, (TileEntityColoranator) te);
 			}
 		}
+		
 		return null;
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
-	{
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		
 		return null;
 	}
 }
