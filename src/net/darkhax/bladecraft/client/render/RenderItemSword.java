@@ -1,62 +1,130 @@
 package net.darkhax.bladecraft.client.render;
 
 import net.darkhax.bladecraft.client.event.ItemIconHandler;
+import net.darkhax.bladecraft.lib.Reference;
+import net.darkhax.bladecraft.lib.Utils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.IItemRenderer;
 
 public class RenderItemSword implements IItemRenderer {
 
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
 
-        return type == ItemRenderType.ENTITY && (helper == ItemRendererHelper.ENTITY_BOBBING || helper == ItemRendererHelper.ENTITY_ROTATION);
-    }
+		return type == ItemRenderType.ENTITY && (helper == ItemRendererHelper.ENTITY_BOBBING || helper == ItemRendererHelper.ENTITY_ROTATION);
+	}
 
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+	@Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
-        Icon icon = ItemIconHandler.getTextureMap().registerIcon("iron_shovel");
+		Icon iconSword;
+		Icon iconHilt = ItemIconHandler.getIconHilt();
+		Icon iconInset = ItemIconHandler.getIconInset();
+		
+		if (!item.hasTagCompound()) {
+			
+			item.setTagCompound(new NBTTagCompound());
+			item.stackTagCompound.setString(Reference.COLOR_HEX_NBT_KEY, "unset");
+			item.stackTagCompound.setString(Reference.INSET_HEX_NBT_KEY, "unset");
+		}
 
-        if(icon != null) {
+		int[] hilt = null;
+		int[] inset = null;;
+		
+		if (!item.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY).equals("unset")) {
+			
+			hilt = Utils.getRGBFromHexStr(item.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY));
+		}
+		
+		if (!item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY).equals("unset")) {
+			
+			inset = Utils.getRGBFromHexStr(item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
+		}
 
-            switch(type) {
+		iconSword = item.getIconIndex();
 
-                case EQUIPPED: {
+		switch (type) {
 
-                    RenderItemHelper.drawIconIn3D(item, icon);
-                    break;
-                }
+		case EQUIPPED: {
 
-                case EQUIPPED_FIRST_PERSON: {
+			RenderItemHelper.drawIconIn3D(item, iconSword, false, 1, 1, 1);
+			
+			if (hilt != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconHilt, false, hilt[0], hilt[1], hilt[2]);
+			}
+			
+			if (inset != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconInset, false, inset[0], inset[1], inset[2]);
+			}
+			
+			break;
+		}
 
-                    RenderItemHelper.drawIconIn3D(item, icon);
-                    break;
-                }
+		case EQUIPPED_FIRST_PERSON: {
 
-                case INVENTORY: {
+			RenderItemHelper.drawIconIn3D(item, iconSword, false, 1, 1, 1);
+			
+			if (hilt != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconHilt, false, hilt[0], hilt[1], hilt[2]);
+			}
+			
+			if (inset != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconInset, false, inset[0], inset[1], inset[2]);
+			}
+			
+			break;
+		}
 
-                    RenderItemHelper.renderIconInInventory(icon, 1f, 1f, 1f);
-                    break;
-                }
+		case INVENTORY: {
 
-                case ENTITY: {
+			RenderItemHelper.renderIconInInventory(iconSword, 1f, 1f, 1f);
+			
+			if (hilt != null) {
+				
+				RenderItemHelper.renderIconInInventory(iconHilt, hilt[0], hilt[1], hilt[2]);
+			}
+			
+			if (inset != null) {
+				
+				RenderItemHelper.renderIconInInventory(iconInset, inset[0], inset[1], inset[2]);
+			}
+			
+			break;
+		}
 
-                    RenderItemHelper.drawIconIn3D(item, icon, true);
-                    break;
-                }
+		case ENTITY: {
 
-                default: {
+			RenderItemHelper.drawIconIn3D(item, iconSword, true, 1, 1, 1);
+			
+			if (hilt != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconHilt, false, hilt[0], hilt[1], hilt[2]);
+			}
+			
+			if (inset != null) {
+				
+				RenderItemHelper.drawIconIn3D(item, iconInset, false, inset[0], inset[1], inset[2]);
+			}
+			
+			break;
+		}
 
-                    break;
-                }
-            }
-        }
-    }
+		default: {
+
+			break;
+		}
+		}
+	}
 }

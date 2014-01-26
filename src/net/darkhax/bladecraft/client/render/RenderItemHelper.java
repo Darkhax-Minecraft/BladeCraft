@@ -13,10 +13,10 @@ public class RenderItemHelper {
 
     public static void drawIconIn3D(ItemStack stack, Icon icon) {
 
-        drawIconIn3D(stack, icon, false);
+        drawIconIn3D(stack, icon, false, 1F, 1F, 1F);
     }
 
-    public static void drawIconIn3D(ItemStack stack, Icon icon, boolean isEntity) {
+    public static void drawIconIn3D(ItemStack stack, Icon icon, boolean isEntity, float red, float green, float blue) {
 
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -30,11 +30,11 @@ public class RenderItemHelper {
 
         mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(stack.getItemSpriteNumber()));
         Tessellator tessellator = Tessellator.instance;
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);       
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor3f(red, green, blue);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         float f6 = 1F;
@@ -63,7 +63,6 @@ public class RenderItemHelper {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor3f(red, green, blue);
-
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
 
