@@ -21,6 +21,7 @@ public class ItemIconHandler {
         if(evt.map.textureType == 1) {
 
         	this.map = evt.map;
+        	System.out.println("Ok it's loaded 1010-392-039-3029-2300e9432");
         }
     }
     
