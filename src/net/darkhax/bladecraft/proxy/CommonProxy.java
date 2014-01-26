@@ -25,7 +25,6 @@ public class CommonProxy implements IGuiHandler {
 			switch (ID) {
 			
 			case Reference.COLORANATOR_GUI_ID:
-				
 				return new ContainerColoranator(player.inventory, (TileEntityColoranator) te);
 			}
 		}

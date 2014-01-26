@@ -1,7 +1,9 @@
 package net.darkhax.bladecraft.tileentity;
 
+import cpw.mods.fml.common.FMLLog;
 import net.darkhax.bladecraft.block.BlockColoranator;
 import net.darkhax.bladecraft.lib.Reference;
+import net.darkhax.bladecraft.lib.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -23,6 +25,8 @@ public class TileEntityColoranator extends TileEntity implements
 	private String localizedInvName;
 
 	private boolean requiresUpdate = false;
+	
+	private int[][] rgbVals = new int[2][3];
 
 	@Override
 	public int getSizeInventory() {
@@ -105,18 +109,25 @@ public class TileEntityColoranator extends TileEntity implements
 		super.readFromNBT(nbtTag);
 		NBTTagList nbttaglist = nbtTag.getTagList("Items");
 		this.coloranatorStacks = new ItemStack[this.getSizeInventory()];
-
+		
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
 			byte b0 = nbttagcompound1.getByte("Slot");
-
+			
 			if (b0 >= 0 && b0 < this.coloranatorStacks.length) {
 				this.coloranatorStacks[b0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
 
 		this.requiresUpdate = nbtTag.getBoolean("RequiresUpdate");
-
+		
+		if(nbtTag.hasKey("InsetRGB"))
+			rgbVals[0] = Utils.getRGBFromHexStr(nbtTag.getString("InsetRGB"));
+		
+		if(nbtTag.hasKey("ColorRGB"))
+			rgbVals[1] = Utils.getRGBFromHexStr(nbtTag.getString("InsetRGB"));
+		
+		
 		if (nbtTag.hasKey("CustomName")) {
 			this.localizedInvName = nbtTag.getString("CustomName");
 		}
@@ -135,9 +146,15 @@ public class TileEntityColoranator extends TileEntity implements
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
-
+		FMLLog.severe("UPDATING WRITE ON NBT");
 		nbtTag.setTag("Items", nbttaglist);
 		nbtTag.setBoolean("RequiresUpdate", requiresUpdate);
+		
+		if(rgbVals[0] != null)
+			nbtTag.setString("InsetRGB", Utils.getHexStrFromRGB(rgbVals[0]));
+		
+		if(rgbVals[1] != null)
+			nbtTag.setString("ColorRGB", Utils.getHexStrFromRGB(rgbVals[1]));
 
 		if (this.isInvNameLocalized()) {
 			nbtTag.setString("CustomName", this.localizedInvName);
@@ -152,10 +169,28 @@ public class TileEntityColoranator extends TileEntity implements
 
 	@Override
 	public void updateEntity() {
-
-		if (requiresUpdate) {
+		
+		if (requiresUpdate) 
+		{
+			modifyItem();
 			this.onInventoryChanged();
 			BlockColoranator.updateBlockState(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		}
+	}
+
+	private void modifyItem() 
+	{
+		if(coloranatorStacks[0] != null)
+		{
+			ItemStack stack = coloranatorStacks[0];
+			ItemStack stack1 = stack.copy();
+			if(!stack1.hasTagCompound())
+				stack1.setTagCompound(new NBTTagCompound());
+			
+			stack1.getTagCompound().setString(Reference.INSET_HEX_NBT_KEY, Utils.getHexStrFromRGB(rgbVals[0]));
+			stack1.getTagCompound().setString(Reference.COLOR_HEX_NBT_KEY, Utils.getHexStrFromRGB(rgbVals[1]));
+			
+			coloranatorStacks[0] = stack1;
 		}
 	}
 
@@ -203,7 +238,17 @@ public class TileEntityColoranator extends TileEntity implements
 
 		return side != 0 || slot != 1 || itemstack.itemID == Item.bucketEmpty.itemID;
 	}
+	
+	public void setRequiresUpdate()
+	{
+		this.requiresUpdate = true;
+	}
 
+	public void setRGBValues(int[][] rgbArrays)
+	{
+		rgbVals = rgbArrays;
+	}
+	
 	public Packet getDescriptionPacket() {
 
 		NBTTagCompound tagCompound = new NBTTagCompound();
