@@ -1,5 +1,6 @@
 package net.darkhax.bladecraft.command;
 
+import cpw.mods.fml.common.FMLLog;
 import net.darkhax.bladecraft.lib.Reference;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -42,12 +43,15 @@ public class CommandSetColor extends CommandBase {
 			if (itemstack.getItem() instanceof ItemSword) {
 				if (!itemstack.hasTagCompound())
 					itemstack.setTagCompound(new NBTTagCompound());
-
+				
+				FMLLog.severe("Checkpoint 1");
+				
 				if (isValidHexColor(cmdArgs[1])) {
+					FMLLog.severe("Checkpoint 2");
 					if (cmdArgs[0].equals("i"))
-						itemstack.getTagCompound().setInteger(Reference.INSET_HEX_NBT_KEY, Integer.decode(cmdArgs[1]));
+						itemstack.getTagCompound().setString(Reference.INSET_HEX_NBT_KEY, cmdArgs[1]);
 					else if (cmdArgs[0].equals("c"))
-						itemstack.getTagCompound().setInteger(Reference.COLOR_HEX_NBT_KEY, Integer.decode(cmdArgs[1]));
+						itemstack.getTagCompound().setString(Reference.COLOR_HEX_NBT_KEY, cmdArgs[1]);
 					else
 						throw new WrongUsageException(Reference.SETCOLOR_COMMANDUSAGE_KEY, new Object[0]);
 				}
@@ -61,8 +65,9 @@ public class CommandSetColor extends CommandBase {
 	private boolean isValidHexColor(String str) {
 
 		boolean isValid = true;
-		for (char char1 : str.toCharArray()) {
-			if (!(isInRange(char1, 47, 58) || isInRange(char1, 64, 91) || isInRange(char1, 96, 123))) {
+		char[] chars = str.toCharArray();
+		for (int index = 1; index < chars.length - 1; index++) {
+			if (!(isInRange(chars[index], 47, 58) || isInRange(chars[index], 64, 91) || isInRange(chars[index], 96, 123))) {
 				isValid = false;
 			}
 		}

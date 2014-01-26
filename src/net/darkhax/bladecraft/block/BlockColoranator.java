@@ -100,7 +100,6 @@ public class BlockColoranator extends BlockContainer {
 		else {
 			TileEntityColoranator tileentitycoloranator = (TileEntityColoranator) world.getBlockTileEntity(x, y, z);
 			
-			FMLLog.severe(tileentitycoloranator.toString());
 			if (tileentitycoloranator != null)
 			{
 				entityPlayer.openGui(BladeCraft.instance, Reference.COLORANATOR_GUI_ID, world, x, y, z);
@@ -124,7 +123,6 @@ public class BlockColoranator extends BlockContainer {
 
 	public TileEntity createNewTileEntity(World world) {
 
-		FMLLog.severe("Creating TileEntity");
 		return new TileEntityColoranator();
 	}
 

@@ -22,6 +22,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -44,6 +45,9 @@ public class BladeCraft {
 		new Blocks();
 		GameRegistry.registerTileEntity(TileEntityColoranator.class, "teColoranator");
 		GameRegistry.addRecipe(new ItemStack(Blocks.coloranatorBlock), new Object[]{"X", 'X', Block.dirt});
+		LanguageRegistry.addName(Blocks.coloranatorBlock, "Coloranator");
+		LanguageRegistry.instance().addStringLocalization("container.coloranator", "Coloranator Machine");
+		
 		
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
 	}
