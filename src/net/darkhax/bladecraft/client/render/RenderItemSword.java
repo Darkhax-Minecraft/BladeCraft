@@ -32,19 +32,19 @@ public class RenderItemSword implements IItemRenderer {
 		if (!item.hasTagCompound()) {
 			
 			item.setTagCompound(new NBTTagCompound());
-			item.stackTagCompound.setString(Reference.COLOR_HEX_NBT_KEY, "unset");
-			item.stackTagCompound.setString(Reference.INSET_HEX_NBT_KEY, "unset");
+			item.stackTagCompound.setString(Reference.COLOR_HEX_NBT_KEY, "Unset");
+			item.stackTagCompound.setString(Reference.INSET_HEX_NBT_KEY, "Unset");
 		}
 
 		int[] hilt = null;
-		int[] inset = null;;
+		int[] inset = null;
 		
-		if (!item.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY).equals("unset")) {
+		if (!item.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY).equalsIgnoreCase("Unset")) {
 			
 			hilt = Utils.getRGBFromHexStr(item.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY));
 		}
 		
-		if (!item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY).equals("unset")) {
+		if (!item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY).equalsIgnoreCase("Unset")) {
 			
 			inset = Utils.getRGBFromHexStr(item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
 		}
@@ -110,12 +110,12 @@ public class RenderItemSword implements IItemRenderer {
 			
 			if (hilt != null) {
 				
-				RenderItemHelper.drawIconIn3D(item, iconHilt, false, hilt[0], hilt[1], hilt[2]);
+				RenderItemHelper.drawIconIn3D(item, iconHilt, true, hilt[0], hilt[1], hilt[2]);
 			}
 			
 			if (inset != null) {
 				
-				RenderItemHelper.drawIconIn3D(item, iconInset, false, inset[0], inset[1], inset[2]);
+				RenderItemHelper.drawIconIn3D(item, iconInset, true, inset[0], inset[1], inset[2]);
 			}
 			
 			break;

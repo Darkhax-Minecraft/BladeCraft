@@ -2,6 +2,7 @@ package net.darkhax.bladecraft.client;
 
 import cpw.mods.fml.common.FMLLog;
 import net.darkhax.bladecraft.client.event.ItemIconHandler;
+import net.darkhax.bladecraft.client.event.ToolTipHandler;
 import net.darkhax.bladecraft.client.gui.GuiColoranator;
 import net.darkhax.bladecraft.client.render.RenderItemSword;
 import net.darkhax.bladecraft.lib.Reference;
@@ -18,8 +19,14 @@ public class ClientProxy extends CommonProxy {
 
 	public void registerItemRenders() {
 		
+		MinecraftForgeClient.registerItemRenderer(Item.swordWood.itemID, new RenderItemSword());
+		MinecraftForgeClient.registerItemRenderer(Item.swordStone.itemID, new RenderItemSword());
+		MinecraftForgeClient.registerItemRenderer(Item.swordIron.itemID, new RenderItemSword());
+		MinecraftForgeClient.registerItemRenderer(Item.swordGold.itemID, new RenderItemSword());
 		MinecraftForgeClient.registerItemRenderer(Item.swordDiamond.itemID, new RenderItemSword());
+		
 		MinecraftForge.EVENT_BUS.register(new ItemIconHandler());
+		MinecraftForge.EVENT_BUS.register(new ToolTipHandler());
 	}
 	
 	@Override
