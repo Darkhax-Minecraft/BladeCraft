@@ -2,6 +2,8 @@ package net.darkhax.bladecraft.client.event;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.darkhax.bladecraft.lib.Reference;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentArrowFire;
 import net.minecraft.item.Item;
@@ -25,8 +27,11 @@ public class ToolTipHandler {
 				event.itemStack.stackTagCompound.setString(Reference.INSET_HEX_NBT_KEY, "Unset");
 			}
 
-			event.toolTip.add("Hilt : " + event.itemStack.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY));
-			event.toolTip.add("Inset : " + event.itemStack.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
+			if (GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak)) {
+				
+				event.toolTip.add("Hilt : " + event.itemStack.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY));
+				event.toolTip.add("Inset : " + event.itemStack.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
+			}
 		}
 	}
 }
