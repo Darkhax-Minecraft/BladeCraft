@@ -32,6 +32,11 @@ public class ToolTipHandler {
 				event.toolTip.add("Hilt : " + event.itemStack.stackTagCompound.getString(Reference.COLOR_HEX_NBT_KEY));
 				event.toolTip.add("Inset : " + event.itemStack.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
 			}
+			
+			else {
+				
+				event.toolTip.add("<Hold shift to view data>");
+			}
 		}
 	}
 }
