@@ -1,5 +1,7 @@
 package net.darkhax.bladecraft.client.render;
 
+import java.awt.Color;
+
 import net.darkhax.bladecraft.client.event.ItemIconHandler;
 import net.darkhax.bladecraft.lib.Reference;
 import net.darkhax.bladecraft.lib.Utils;
