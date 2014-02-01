@@ -1,29 +1,31 @@
 package net.darkhax.bladecraft.lib;
 
+import java.awt.Color;
+
 public class Utils {
 
 	/**
 	 * Utility method for converting a Hexadecimal String to an RGB int array
 	 * 
-	 * @param String
-	 *            - String to convert to hex.
+	 * @param String - String to convert to hex.
 	 * @return int Array containing 3 indices, Red, Green, and Blue
 	 **/
 	public static int[] getRGBFromHexStr(String hexStr) {
 
+		Color color = Color.decode(hexStr);
 		int hex = Integer.decode(hexStr);
+		
 		int[] rgb = new int[3];
-		rgb[0] = (hex >>> 16) & 0xFF;
-		rgb[1] = (hex >>> 8) & 0xFF;
-		rgb[2] = (hex >>> 0) & 0xFF;
+		rgb[0] = color.getRed();
+		rgb[1] = color.getBlue();
+		rgb[2] = color.getGreen();
 		return rgb;
 	}
 
 	/**
 	 * Utility method for converting an rgb int array to a Hexadecimal String
 	 * 
-	 * @param RGB
-	 *            int array to be converting to Hexadecimal String
+	 * @param RGB - int array to be converting to Hexadecimal String
 	 * @return String - Converted Hexadecimal String
 	 **/
 	public static String getHexStrFromRGB(int[] rgb) {
