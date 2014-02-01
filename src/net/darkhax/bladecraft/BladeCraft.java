@@ -8,7 +8,7 @@ import net.darkhax.bladecraft.client.event.ToolTipHandler;
 import net.darkhax.bladecraft.command.CommandSetColor;
 import net.darkhax.bladecraft.handler.RecipeHandler;
 import net.darkhax.bladecraft.lib.Config;
-import net.darkhax.bladecraft.lib.ItemStackLib;
+import net.darkhax.bladecraft.lib.EnumColorManager;
 import net.darkhax.bladecraft.lib.Reference;
 import net.darkhax.bladecraft.proxy.CommonProxy;
 import net.darkhax.bladecraft.tileentity.TileEntityColoranator;
@@ -50,12 +50,10 @@ public class BladeCraft {
 		new Blocks();
 		GameRegistry.registerTileEntity(TileEntityColoranator.class, "teColoranator");
 		GameRegistry.addRecipe(new ItemStack(Blocks.coloranatorBlock), new Object[]{"X", 'X', Block.dirt});
-		LanguageRegistry.addName(Blocks.coloranatorBlock, "Coloranator");
-		LanguageRegistry.instance().addStringLocalization("container.coloranator", "Coloranator Machine");
 		
 		
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
-		RecipeHandler.createRecipeWithSwords(ItemStackLib.ink, "#000000");
+		RecipeHandler.createRecipeWithSwordsFromEnum("black");
 	}
 
 	@EventHandler

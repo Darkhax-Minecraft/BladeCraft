@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 
 public enum EnumColorManager {
 
-	Black("", "", new ItemStack(1,1,1));
+	Black("Black", "#000000", new ItemStack(Item.dyePowder,1,0));
 
     private EnumColorManager(String color, String hex, ItemStack stack) {
 
