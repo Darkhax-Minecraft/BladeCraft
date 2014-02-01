@@ -49,11 +49,10 @@ public class BladeCraft {
 
 		new Blocks();
 		GameRegistry.registerTileEntity(TileEntityColoranator.class, "teColoranator");
-		GameRegistry.addRecipe(new ItemStack(Blocks.coloranatorBlock), new Object[]{"X", 'X', Block.dirt});
 		
 		
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
-		RecipeHandler.createRecipeWithSwordsFromEnum("black");
+		RecipeHandler.createRecipesFromEnum();
 	}
 
 	@EventHandler

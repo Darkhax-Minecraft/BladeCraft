@@ -1,15 +1,29 @@
 package net.darkhax.bladecraft.lib;
 
-import javax.swing.text.html.parser.Element;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-
 public enum EnumColorManager {
 
-	Black("Black", "#000000", new ItemStack(Item.dyePowder,1,0));
-
+	Black("Black", "#191919", new ItemStack(Item.dyePowder,1,0)),
+	RED("Red", "#993333", new ItemStack(Item.dyePowder,1,1)),
+	GREEN("Green", "#667F33", new ItemStack(Item.dyePowder,1,2)),
+	BROWN("Brown", "#664C33", new ItemStack(Item.dyePowder,1,3)),
+	BLUE("Blue", "#334CB2", new ItemStack(Item.dyePowder,1,4)),
+	PURPLE("Purple", "#7F3FB2", new ItemStack(Item.dyePowder,1,5)),
+	CYAN("Cyan", "#4C7F99", new ItemStack(Item.dyePowder,1,6)),
+	LIGHT_GRAY("Light_Gray", "#999999", new ItemStack(Item.dyePowder,1,7)),
+	GRAY("Gray", "#4C4C4C", new ItemStack(Item.dyePowder,1,8)),
+	PINK("Pink", "#F27FA5", new ItemStack(Item.dyePowder,1,9)),
+	LIME("Lime", "#7FCC19", new ItemStack(Item.dyePowder,1,10)),
+	YELLOW("Yellow", "#E5E533", new ItemStack(Item.dyePowder,1,11)),
+	LIGHT_BLUE("Light_Blue", "#6699D8", new ItemStack(Item.dyePowder,1,12)),
+	MAGENTA("Magenta", "#B24CD8", new ItemStack(Item.dyePowder,1,13)),
+	ORANGE("Orange", "#D87F33", new ItemStack(Item.dyePowder,1,14)),
+	WHITE("White", "#FFFFFF", new ItemStack(Item.dyePowder,1,15));
+	
+	public static final String[] dyeColors = new String[] {"black", "red", "green", "brown", "blue", "purple", "cyan", "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white"};
+	
     private EnumColorManager(String color, String hex, ItemStack stack) {
 
     	this.color = color;

@@ -45,6 +45,17 @@ public class RecipeHandler {
 	}
 	
 	/**
+	 * Creates recipes from all the colors.
+	 */
+	public static void createRecipesFromEnum() {
+		
+		for (int i = 0; i < EnumColorManager.dyeColors.length; i++) {
+				
+			createRecipeWithSwordsFromEnum(EnumColorManager.dyeColors[i]);
+		}	
+	}
+	
+	/**
 	 * Much lazy, Very Dark, So Hax, wow.
 	 * @param item: Item for getting ItemStack.
 	 * @return ItemStack based from item input.
