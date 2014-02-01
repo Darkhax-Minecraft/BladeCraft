@@ -5,6 +5,7 @@ import net.darkhax.bladecraft.block.BlockColoranator;
 import net.darkhax.bladecraft.lib.Config;
 import net.darkhax.bladecraft.lib.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 
 public class Blocks {
@@ -18,7 +19,7 @@ public class Blocks {
 
 	private void init() {
 
-		coloranatorBlock = new BlockColoranator(Config.coloranatorBlockID);
+		coloranatorBlock = new BlockColoranator(Config.coloranatorBlockID).setCreativeTab(CreativeTabs.tabMisc);
 		registerBlock(coloranatorBlock, "coloranatorBlock");
 	}
 	
