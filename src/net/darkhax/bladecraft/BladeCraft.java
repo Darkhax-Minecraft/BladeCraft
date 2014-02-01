@@ -55,7 +55,7 @@ public class BladeCraft {
 		
 		
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
-		RecipeHandler.createRecipeWithSwords(ItemStackLib.ink, "#111111");
+		RecipeHandler.createRecipeWithSwords(ItemStackLib.ink, "#000000");
 	}
 
 	@EventHandler
