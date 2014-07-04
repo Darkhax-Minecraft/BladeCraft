@@ -8,6 +8,7 @@ import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModMetadata;
@@ -30,6 +31,9 @@ public class Bladecraft {
         setModMeta(event.getModMetadata());
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
         proxy.registerSidededEvents();
+        
+        TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityDyer.class, "BladeCraftDyer");
+        TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
     }
     
     @EventHandler
