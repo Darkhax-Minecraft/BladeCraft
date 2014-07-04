@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.epoxide.bladecraft.command.CommandDye;
 import net.epoxide.bladecraft.handler.ConfigurationHandler;
+import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.command.ServerCommandManager;
@@ -29,6 +30,8 @@ public class Bladecraft {
         setModMeta(event.getModMetadata());
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
         proxy.registerSidededEvents();
+        
+        System.out.println(DyeableItems.calculateEntryFromColorValue(1));
     }
     
     @EventHandler

@@ -1,11 +1,5 @@
 package net.epoxide.bladecraft.command;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Date;
-
 import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.command.CommandBase;
@@ -19,13 +13,13 @@ public class CommandDye extends CommandBase {
     @Override
     public String getCommandName() {
 
-        return "bladecraft";
+        return "dye";
     }
 
     @Override
     public String getCommandUsage(ICommandSender player) {
 
-        return "commands.bladecraft.usage";
+        return "commands.dye.usage";
     }
 
     @Override

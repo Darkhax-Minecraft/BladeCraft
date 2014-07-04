@@ -15,4 +15,7 @@ public class Reference {
     public static final String BLADE_HEX_NBT_KEY = "overlayBlade";
     public static final String HILT_HEX_NBT_KEY = "overlayHilt";
     public static final String INSET_HEX_NBT_KEY = "overlayInset";
+    
+    
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 }
