@@ -1,17 +1,24 @@
 package net.epoxide.bladecraft.tileentity;
 
+import net.epoxide.bladecraft.item.crafting.DyeableItems;
+import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityMixer extends TileEntity implements ISidedInventory
 {
     private static float maxComponentAmt = 18432.0F;
     
-    private int timeSinceLastSplit;
+    // 5 second split time by default. Considering customizability via Configuration file
+    public static final int timeToSplit = 5 * 20;
+    private int splitTime;
+    
     private float redComponentAmt;
     private float greenComponentAmt;
     private float blueComponentAmt;
@@ -105,6 +112,88 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         return worldObj.getTileEntity(xCoord, yCoord, zCoord) != this ? false : player.getDistanceSq(xCoord, yCoord, zCoord) <= 64.00D;
     }
     
+    @Override
+    public void readFromNBT(NBTTagCompound nbtTagCompound)
+    {
+        super.readFromNBT(nbtTagCompound);
+        
+        NBTTagList itemList = nbtTagCompound.getTagList("Items", 10);
+        mixerStacks = new ItemStack[mixerStacks.length];
+        
+        for(int tag = 0; tag < itemList.tagCount(); tag++)
+        {
+            NBTTagCompound nbtTag = itemList.getCompoundTagAt(tag);
+            byte itemSlot = nbtTag.getByte("Slot");
+            
+            if(itemSlot >= 0 && itemSlot < mixerStacks.length)
+            {
+                mixerStacks[itemSlot] = ItemStack.loadItemStackFromNBT(nbtTag);
+            }
+        }
+        
+        splitTime = nbtTagCompound.getShort("SplitTime");
+        
+        if(nbtTagCompound.hasKey("CustomName", 8))
+        {
+            customName = nbtTagCompound.getString("CustomName");
+        }
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound nbtTagCompound)
+    {
+        super.writeToNBT(nbtTagCompound);
+        
+        nbtTagCompound.setShort("SplitTime", (short)splitTime);
+        NBTTagList itemList = new NBTTagList();
+        for(int stackSlot = 0; stackSlot < mixerStacks.length; stackSlot++)
+        {
+            if(mixerStacks[stackSlot] != null)
+            {
+                NBTTagCompound nbtTag = new NBTTagCompound();
+                nbtTag.setByte("Slot", (byte)stackSlot);
+                mixerStacks[stackSlot].writeToNBT(nbtTag);
+                itemList.appendTag(nbtTag);
+            }
+        }
+        
+        nbtTagCompound.setTag("Items", itemList);
+        
+        if(this.hasCustomInventoryName())
+        {
+            nbtTagCompound.setString("CustomName", customName);
+        }
+    }
+    
+    public void updateEntity()
+    {
+        if(!worldObj.isRemote)
+        {
+            if(mixerStacks[0] != null)
+            {
+                ++splitTime;
+                if(splitTime == timeToSplit)
+                {
+                    splitTime = 0;
+                    performDyeSplit();
+                }
+            }
+        }
+    }
+    
+    private void performDyeSplit()
+    {
+        RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[0]);
+        redComponentAmt += entry.getRed();
+        greenComponentAmt += entry.getGreen();
+        blueComponentAmt += entry.getBlue();
+        mixerStacks[0].stackSize--;
+        if(mixerStacks[0].stackSize == 0)
+        {
+            mixerStacks[0] = null;
+        }
+    }
+
     @Override
     public void openInventory() {}
     

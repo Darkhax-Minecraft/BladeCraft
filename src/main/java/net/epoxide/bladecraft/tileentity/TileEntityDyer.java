@@ -5,15 +5,16 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityDyer extends TileEntity implements ISidedInventory
 {
-    // 5 second split time by default. Considering customizability via Configuration file
-    public static final int timeToSplit = 5 * 20;
+    public static final int DYE_TIME = 20 * 20;
     
+    private int dyeingTime;
     private String customName;
-
     private ItemStack[] dyerStacks = new ItemStack[5];
     
     @Override
@@ -140,5 +141,57 @@ public class TileEntityDyer extends TileEntity implements ISidedInventory
     public boolean isItemDye(ItemStack itemstack)
     {
         return itemstack.getItem() instanceof ItemDye;
+    }
+    
+    public void readFromNBT(NBTTagCompound nbtTagCompound)
+    {
+        super.readFromNBT(nbtTagCompound);
+        
+        NBTTagList itemList = nbtTagCompound.getTagList("Items", 10);
+        dyerStacks = new ItemStack[dyerStacks.length];
+        
+        for(int tag = 0; tag < itemList.tagCount(); tag++)
+        {
+            NBTTagCompound nbtTag = itemList.getCompoundTagAt(tag);
+            byte itemSlot = nbtTag.getByte("Slot");
+            
+            if(itemSlot >= 0 && itemSlot < dyerStacks.length)
+            {
+                dyerStacks[itemSlot] = ItemStack.loadItemStackFromNBT(nbtTag);
+            }
+        }
+        
+        
+        
+        if(nbtTagCompound.hasKey("CustomName", 8))
+        {
+            customName = nbtTagCompound.getString("CustomName");
+        }
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound nbtTagCompound)
+    {
+        super.writeToNBT(nbtTagCompound);
+        
+        nbtTagCompound.setShort("DyeTime", (short)dyeingTime);
+        NBTTagList itemList = new NBTTagList();
+        for(int stackSlot = 0; stackSlot < dyerStacks.length; stackSlot++)
+        {
+            if(dyerStacks[stackSlot] != null)
+            {
+                NBTTagCompound nbtTag = new NBTTagCompound();
+                nbtTag.setByte("Slot", (byte)stackSlot);
+                dyerStacks[stackSlot].writeToNBT(nbtTag);
+                itemList.appendTag(nbtTag);
+            }
+        }
+        
+        nbtTagCompound.setTag("Items", itemList);
+        
+        if(this.hasCustomInventoryName())
+        {
+            nbtTagCompound.setString("CustomName", customName);
+        }
     }
 }
