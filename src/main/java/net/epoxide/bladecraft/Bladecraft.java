@@ -30,8 +30,6 @@ public class Bladecraft {
         setModMeta(event.getModMetadata());
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
         proxy.registerSidededEvents();
-        
-        System.out.println(DyeableItems.calculateEntryFromColorValue(1));
     }
     
     @EventHandler

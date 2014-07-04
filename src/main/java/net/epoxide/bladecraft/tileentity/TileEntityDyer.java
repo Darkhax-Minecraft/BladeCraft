@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityDyer extends TileEntity implements ISidedInventory
 {
-    
+    // 5 second split time by default. Considering customizability via Configuration file
     public static final int timeToSplit = 5 * 20;
     
     private String customName;
