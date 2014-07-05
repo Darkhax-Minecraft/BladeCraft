@@ -1,20 +1,25 @@
 package net.epoxide.bladecraft;
 
+import io.netty.channel.ChannelHandler;
+
 import java.util.Arrays;
 
 import net.epoxide.bladecraft.command.CommandDye;
 import net.epoxide.bladecraft.handler.ConfigurationHandler;
-import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.FACTORY)
 public class Bladecraft {
@@ -25,6 +30,10 @@ public class Bladecraft {
     @Mod.Instance(Reference.MOD_ID)
     public static Bladecraft instance;
 
+    public static SimpleNetworkWrapper networkChannels;
+    
+    public static Side side = FMLCommonHandler.instance().getEffectiveSide();
+    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -34,6 +43,9 @@ public class Bladecraft {
         
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityDyer.class, "BladeCraftDyer");
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
+         
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+        networkChannels = NetworkRegistry.INSTANCE.newSimpleChannel("BC|NetworkChannel");
     }
     
     @EventHandler

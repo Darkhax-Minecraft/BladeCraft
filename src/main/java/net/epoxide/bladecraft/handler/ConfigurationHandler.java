@@ -18,8 +18,6 @@ public class ConfigurationHandler {
 
         config = new Configuration(configFile);
         FMLCommonHandler.instance().bus().register(this);
-        applyDyeToAllSwords = config.get(Configuration.CATEGORY_GENERAL, "Allow all swords to be dyed", false);
-        applyDyeToAllSwords.comment = "Setting this to true will register all swords in the item registry to be dyed.";
         syncConfig();
     }
 

@@ -161,8 +161,6 @@ public class TileEntityDyer extends TileEntity implements ISidedInventory
             }
         }
         
-        
-        
         if(nbtTagCompound.hasKey("CustomName", 8))
         {
             customName = nbtTagCompound.getString("CustomName");
@@ -193,5 +191,25 @@ public class TileEntityDyer extends TileEntity implements ISidedInventory
         {
             nbtTagCompound.setString("CustomName", customName);
         }
+    }
+    
+    public void sendDyeUpdate(int red, int green, int blue)
+    {
+        
+    }
+
+    public boolean isDyeing()
+    {
+        return dyeingTime > 0;
+    }
+
+    public int getDyeProgressScaled(int i)
+    {
+        return 0;
+    }
+
+    public int getDyeTimeRemainingScaled(int i)
+    {
+        return 0;
     }
 }

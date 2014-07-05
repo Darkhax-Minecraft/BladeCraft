@@ -50,4 +50,9 @@ public class DyeableItems
     {
         return entry == NULL_ENTRY;
     }
+    
+    public static boolean contains(ItemStack stack)
+    {
+        return dyeables.containsKey(new DyeEntry(stack.getItem(), stack.getItemDamage()));
+    }
 }

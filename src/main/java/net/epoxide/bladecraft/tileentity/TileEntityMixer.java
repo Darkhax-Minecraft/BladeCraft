@@ -2,6 +2,7 @@ package net.epoxide.bladecraft.tileentity;
 
 import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.item.crafting.RGBEntry;
+import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemDye;
@@ -16,14 +17,16 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     private static float maxComponentAmt = 18432.0F;
     
     // 5 second split time by default. Considering customizability via Configuration file
-    public static final int timeToSplit = 5 * 20;
-    private int splitTime;
+    public static final int timeToSplit = 10 * 20;
+    public static final int timeToDye = 2 * 60 * 20;
     
+    private int splitTime;
+    private int dyeTime;
+    private boolean shouldDye;
     private float redComponentAmt;
     private float greenComponentAmt;
     private float blueComponentAmt;
     private String customName;
-    
     private ItemStack[] mixerStacks = new ItemStack[3];
     
     @Override
@@ -167,20 +170,77 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     
     public void updateEntity()
     {
+        boolean requiresUpdate = false;
+        
         if(!worldObj.isRemote)
         {
-            if(mixerStacks[0] != null)
+            if(mixerStacks[0] != null && hasSpaceForComponents())
             {
                 ++splitTime;
                 if(splitTime == timeToSplit)
                 {
                     splitTime = 0;
                     performDyeSplit();
+                    requiresUpdate = true;
+                }
+            }
+            else
+            {
+                if(splitTime != 0)
+                    splitTime = 0;
+            }
+            
+            
+            if(mixerStacks[1] != null && shouldDye)
+            {
+                ++dyeTime;
+                if(dyeTime == timeToDye)
+                {
+                    dyeTime = 0;
+                    performItemDyeing();
+                    requiresUpdate = true;
                 }
             }
         }
+        
+        if(requiresUpdate)
+            markDirty();
     }
     
+    private void performItemDyeing()
+    {
+        ItemStack stack = applyDye(mixerStacks[1]);
+        mixerStacks[2] = stack;
+        mixerStacks[1] = null;
+        shouldDye = false;
+    }
+
+    private ItemStack applyDye(ItemStack itemStack)
+    {
+        ItemStack stack = itemStack.copy();
+        Utilities.prepareStack(stack);
+        stack.setTagCompound(buildColorTag(stack.getTagCompound()));
+        return stack;
+    }
+
+    private NBTTagCompound buildColorTag(NBTTagCompound stackCompound)
+    {
+        
+        return null;
+    }
+
+    private boolean hasSpaceForComponents()
+    {
+        RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[1]);
+        float tempRed = redComponentAmt + entry.getRed();
+        float tempGreen = greenComponentAmt + entry.getGreen();
+        float tempBlue = blueComponentAmt + entry.getBlue();
+        
+        if(tempRed < maxComponentAmt && tempGreen < maxComponentAmt && tempBlue < maxComponentAmt)
+            return true;
+        return false;
+    }
+
     private void performDyeSplit()
     {
         RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[0]);
@@ -212,6 +272,11 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         return new int[]{0, 1, 2};
     }
     
+    public void setDyeing()
+    {
+        shouldDye = true;
+    }
+    
     @Override
     public boolean canInsertItem(int slotInd, ItemStack stack, int side)
     {
@@ -226,5 +291,20 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         if(slotInd == 2 && side == 1)
             return true;
         return false;
+    }
+
+    public int getSplitProgressScaled(int i)
+    {
+        return 0;
+    }
+
+    public boolean isSplitting()
+    {
+        return splitTime > 0;
+    }
+
+    public int getSplitTimeRemainingScaled(int i)
+    {
+        return 0;
     }
 }
