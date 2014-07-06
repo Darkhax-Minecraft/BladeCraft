@@ -18,7 +18,7 @@ public class ContainerMixer extends Container
         
         this.addSlotToContainer(new Slot(playerInv, 0, 56, 17));
         this.addSlotToContainer(new Slot(playerInv, 1, 56, 53));
-        this.addSlotToContainer(new SlotDyer(playerInv.player, playerInv, 2, 56, 110));
+        this.addSlotToContainer(new SlotMixer(playerInv.player, playerInv, 2, 56, 110));
         
         int i;
 
