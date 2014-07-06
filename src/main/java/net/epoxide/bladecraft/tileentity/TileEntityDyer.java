@@ -195,7 +195,7 @@ public class TileEntityDyer extends TileEntity implements ISidedInventory
     
     public void sendDyeUpdate(int red, int green, int blue)
     {
-        
+        // TODO Utilize netty network implementation to send coloring updates to server based on client events.
     }
 
     public boolean isDyeing()
@@ -205,11 +205,13 @@ public class TileEntityDyer extends TileEntity implements ISidedInventory
 
     public int getDyeProgressScaled(int i)
     {
+        // TODO Actually write the dyeProgress code
         return 0;
     }
 
     public int getDyeTimeRemainingScaled(int i)
     {
+     // TODO Actually write the time remaining code
         return 0;
     }
 }

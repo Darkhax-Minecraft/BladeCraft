@@ -295,6 +295,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     public int getSplitProgressScaled(int i)
     {
+        // TODO Actually write splitting progress code
         return 0;
     }
 
@@ -305,6 +306,19 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     public int getSplitTimeRemainingScaled(int i)
     {
+        // TODO Actually write split time remaining code
+        return 0;
+    }
+    
+    public int getDyeProgressScaled(int i)
+    {
+        // TODO Actually write dye progress code
+        return 0;
+    }
+    
+    public int getDyeTimeRemainingScaled(int i)
+    {
+        // TODO Actually write dye time remaining code.
         return 0;
     }
 }

@@ -42,5 +42,7 @@ public class GuiMixer extends GuiContainer
             i1 = this.mixer.getSplitProgressScaled(24);
             this.drawTexturedModalRect(k + 79, l + 34, 176, 14, i1 + 1, 16);
         }
+        
+        // TODO Apply rendering for dye progress in the mixer
     }
 }
