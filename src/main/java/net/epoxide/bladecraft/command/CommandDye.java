@@ -5,6 +5,7 @@ import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
@@ -25,9 +26,9 @@ public class CommandDye extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] pars) {
 
-        if (sender instanceof EntityPlayer && ((EntityPlayer) sender).getHeldItem().getItem() instanceof ItemSword) {
+        if (sender instanceof EntityPlayerMP && ((EntityPlayer) sender).getHeldItem().getItem() instanceof ItemSword) {
 
-            ItemStack stack = ((EntityPlayer) sender).getHeldItem();
+            ItemStack stack = ((EntityPlayerMP) sender).getHeldItem();
             Utilities.prepareStack(stack);
             
             if (pars[0].equalsIgnoreCase("blade"))

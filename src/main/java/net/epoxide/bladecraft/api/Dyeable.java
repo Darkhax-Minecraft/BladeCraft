@@ -5,18 +5,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.minecraft.item.Item;
+
 /**
  * This designates a DyeableSword to BladeCraft
  * 
- * *Experimental method of dynamically registering Swords as dyeables*
+ * *Experimental method of dynamically registering items as dyeables*
  * 
  * @author Ghostrec35
  **/
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface DyeableSword
+public @interface Dyeable
 {
-    String hiltOverlay();
-    String insetOverlay();
-    String bladeOverlay();
+    boolean isMetadataSensitive() default false;
+    DyeableKeyValuePair[] dyeableKeyValuePairs();
 }

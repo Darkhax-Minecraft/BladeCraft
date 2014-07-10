@@ -303,13 +303,13 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public void sendSplitUpdate()
     {
         // TODO Write netty implementation for sending split updates to the
-        // server
+        // server, i.e. notify server to begin dye split.
     }
 
     public void sendDyeUpdate(String hexKey)
     {
         // TODO Write netty implementation for sending dye updates to the
-        // server, I.E. when the player elects to begin dyeing the item.
+        // server, i.e. notify the server when the player elects to begin dyeing the item.
     }
 
     public int getSplitProgressScaled(int i)
