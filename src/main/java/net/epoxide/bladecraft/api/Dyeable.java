@@ -1,23 +1,15 @@
 package net.epoxide.bladecraft.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import net.minecraft.item.Item;
 
-/**
- * This designates a DyeableSword to BladeCraft
- * 
- * *Experimental method of dynamically registering items as dyeables*
- * 
- * @author Ghostrec35
- **/
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Dyeable
+public class Dyeable
 {
-    boolean isMetadataSensitive() default false;
-    DyeableKeyValuePair[] dyeableKeyValuePairs();
+    public Class<? extends Item> itemClass;
+    public String nbtKeyForIcon;
+    public String iconLocation;
+    
+    public Dyeable(Class<? extends Item> itemClass, String nbtKeyForIcon, String iconLocation)
+    {
+        this.itemClass = itemClass;
+    }
 }
