@@ -1,7 +1,7 @@
 package net.epoxide.bladecraft.block;
 
 import net.epoxide.bladecraft.Bladecraft;
-import net.epoxide.bladecraft.tileentity.TileEntityDyer;
+import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -9,9 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockDyer extends BlockContainer
+public class BlockForge extends BlockContainer
 {
-    public BlockDyer()
+    public BlockForge()
     {
         super(Material.iron);
     }
@@ -19,7 +19,7 @@ public class BlockDyer extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
-        return new TileEntityDyer();
+        return new TileEntityForge();
     }
     
     @Override

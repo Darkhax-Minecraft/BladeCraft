@@ -1,15 +1,15 @@
 package net.epoxide.bladecraft.network;
 
 import io.netty.buffer.ByteBuf;
-import net.epoxide.bladecraft.tileentity.TileEntityDyer;
+import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 /**
  *  Working on implementation for Dyer updates. 
  **/
-public class DyerUpdateMessage implements IMessage
+public class ForgeUpdateMessage implements IMessage
 {   
-    public DyerUpdateMessage(TileEntityDyer dyer)
+    public ForgeUpdateMessage(TileEntityForge forge)
     {
         
     }

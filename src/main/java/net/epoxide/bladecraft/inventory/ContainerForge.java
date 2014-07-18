@@ -1,17 +1,17 @@
 package net.epoxide.bladecraft.inventory;
 
-import net.epoxide.bladecraft.tileentity.TileEntityDyer;
+import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
-public class ContainerDyer extends Container
+public class ContainerForge extends Container
 {
     private InventoryPlayer playerInv;
-    private TileEntityDyer tileEntity;
+    private TileEntityForge tileEntity;
     
-    public ContainerDyer(InventoryPlayer inventory, TileEntityDyer dyerTE)
+    public ContainerForge(InventoryPlayer inventory, TileEntityForge dyerTE)
     {
         playerInv = inventory;
         tileEntity = dyerTE;

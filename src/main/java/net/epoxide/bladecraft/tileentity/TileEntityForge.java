@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityDyer extends TileEntity implements ISidedInventory
+public class TileEntityForge extends TileEntity implements ISidedInventory
 {
     public static final int DYE_TIME = 20 * 20;
     

@@ -37,7 +37,7 @@ public class Bladecraft {
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
         proxy.registerSidededEvents();
         
-        TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityDyer.class, "BladeCraftDyer");
+        TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityForge.class, "BladeCraftForge");
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
          
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
