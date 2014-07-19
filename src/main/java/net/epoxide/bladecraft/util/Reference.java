@@ -19,6 +19,6 @@ public class Reference {
     
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     
-    public static final int DYER_GUI_ID = 0;
+    public static final int FORGE_GUI_ID = 0;
     public static final int MIXER_GUI_ID = 1;
 }

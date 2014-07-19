@@ -2,8 +2,10 @@ package net.epoxide.bladecraft;
 
 import java.util.Arrays;
 
+import net.epoxide.bladecraft.block.BCBlocks;
 import net.epoxide.bladecraft.command.CommandDye;
 import net.epoxide.bladecraft.handler.ConfigurationHandler;
+import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.command.ServerCommandManager;
@@ -37,11 +39,13 @@ public class Bladecraft {
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
         proxy.registerSidededEvents();
         
+        BCBlocks.initialize();
+        NetworkManager.initialize();
+        
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityForge.class, "BladeCraftForge");
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
          
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
-        networkChannels = NetworkRegistry.INSTANCE.newSimpleChannel("BC|NetworkChannel");
     }
     
     @EventHandler

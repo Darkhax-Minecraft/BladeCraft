@@ -2,6 +2,7 @@ package net.epoxide.bladecraft.client.gui;
 
 import net.epoxide.bladecraft.inventory.ContainerMixer;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
+import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiMixer extends GuiContainer
 {
-    private static final ResourceLocation MIXER_GUI_TEXTURE = new ResourceLocation("textures/gui/container/mixer_gui.png");
+    private static final ResourceLocation MIXER_GUI_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/container/mixer_gui.png");
     private TileEntityMixer mixer;
     
     public GuiMixer(InventoryPlayer inventory, TileEntityMixer te)

@@ -1,5 +1,7 @@
 package net.epoxide.bladecraft.tileentity;
 
+import net.epoxide.bladecraft.network.NetworkManager;
+import net.epoxide.bladecraft.network.message.MessageTileEntityForge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemDye;
@@ -7,14 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityForge extends TileEntity implements ISidedInventory
 {
-    public static final int DYE_TIME = 20 * 20;
+    public static final int FORGE_TIME = 20 * 20;
     
-    private int dyeingTime;
-    private String customName;
+    private int forgingTime;
+    private String customName = "";
     private ItemStack[] dyerStacks = new ItemStack[5];
     
     @Override
@@ -172,7 +175,7 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     {
         super.writeToNBT(nbtTagCompound);
         
-        nbtTagCompound.setShort("DyeTime", (short)dyeingTime);
+        nbtTagCompound.setShort("DyeTime", (short)forgingTime);
         NBTTagList itemList = new NBTTagList();
         for(int stackSlot = 0; stackSlot < dyerStacks.length; stackSlot++)
         {
@@ -193,6 +196,26 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
         }
     }
     
+    public int getForgingTime()
+    {
+        return forgingTime;
+    }
+
+    public void setForgingTime(int forgingTime)
+    {
+        this.forgingTime = forgingTime;
+    }
+
+    public String getCustomName()
+    {
+        return customName;
+    }
+
+    public void setCustomName(String customName)
+    {
+        this.customName = customName;
+    }
+
     public void sendDyeUpdate(int red, int green, int blue)
     {
         // TODO Utilize netty network implementation to send coloring updates to server based on client events.
@@ -200,7 +223,7 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
 
     public boolean isDyeing()
     {
-        return dyeingTime > 0;
+        return forgingTime > 0;
     }
 
     public int getDyeProgressScaled(int i)
@@ -213,5 +236,11 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     {
      // TODO Actually write the time remaining code
         return 0;
+    }
+    
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return NetworkManager.CHANNELS.getPacketFrom(new MessageTileEntityForge(this));
     }
 }

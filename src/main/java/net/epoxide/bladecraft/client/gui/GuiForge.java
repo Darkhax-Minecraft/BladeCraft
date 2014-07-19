@@ -2,6 +2,7 @@ package net.epoxide.bladecraft.client.gui;
 
 import net.epoxide.bladecraft.inventory.ContainerForge;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
+import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiForge extends GuiContainer
 {
-    private static final ResourceLocation DYER_GUI_TEXTURE = new ResourceLocation("textures/gui/container/dyer_gui.png");
+    private static final ResourceLocation FORGE_GUI_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/container/forge_gui.png");
     private TileEntityForge forge;
     
     public GuiForge(InventoryPlayer inventory, TileEntityForge te)
@@ -30,7 +31,7 @@ public class GuiForge extends GuiContainer
     public void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(DYER_GUI_TEXTURE);
+        this.mc.getTextureManager().bindTexture(FORGE_GUI_TEXTURE);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);

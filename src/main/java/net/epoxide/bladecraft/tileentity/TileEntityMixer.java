@@ -2,6 +2,8 @@ package net.epoxide.bladecraft.tileentity;
 
 import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.item.crafting.RGBEntry;
+import net.epoxide.bladecraft.network.NetworkManager;
+import net.epoxide.bladecraft.network.message.MessageTileEntityMixer;
 import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -10,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityMixer extends TileEntity implements ISidedInventory
@@ -21,13 +24,13 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public static final int timeToSplit = 10 * 20;
     public static final int timeToDye = 2 * 60 * 20;
 
-    private int splitTime;
-    private int dyeTime;
-    private boolean shouldDye;
-    private float redComponentAmt;
-    private float greenComponentAmt;
-    private float blueComponentAmt;
-    private String customName;
+    private int splitTime = 0;
+    private int mixTime = 0;
+    private boolean shouldMix = false;
+    private float redComponentAmt = 0;
+    private float greenComponentAmt = 0;
+    private float blueComponentAmt = 0;
+    private String customName = "";
     private ItemStack[] mixerStacks = new ItemStack[3];
 
     @Override
@@ -191,12 +194,12 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                     splitTime = 0;
             }
 
-            if (mixerStacks[1] != null && shouldDye)
+            if (mixerStacks[1] != null && shouldMix)
             {
-                ++dyeTime;
-                if (dyeTime == timeToDye)
+                ++mixTime;
+                if (mixTime == timeToDye)
                 {
-                    dyeTime = 0;
+                    mixTime = 0;
                     performItemDyeing();
                     requiresUpdate = true;
                 }
@@ -212,7 +215,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         ItemStack stack = applyDye(mixerStacks[1]);
         mixerStacks[2] = stack;
         mixerStacks[1] = null;
-        shouldDye = false;
+        shouldMix = false;
     }
 
     private ItemStack applyDye(ItemStack itemStack)
@@ -281,7 +284,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     public void setDyeing()
     {
-        shouldDye = true;
+        shouldMix = true;
     }
 
     @Override
@@ -339,5 +342,80 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     {
         // TODO Actually write dye time remaining code.
         return 0;
+    }
+
+    public String getCustomName()
+    {
+        return this.customName;
+    }
+
+    public int getSplitTime()
+    {
+        return this.splitTime;
+    }
+
+    public int getMixTime()
+    {
+        return this.mixTime;
+    }
+
+    public boolean getShouldMix()
+    {
+        return this.shouldMix;
+    }
+    public float getRedComponentAmt()
+    {
+        return redComponentAmt;
+    }
+
+    public void setRedComponentAmt(float redComponentAmt)
+    {
+        this.redComponentAmt = redComponentAmt;
+    }
+
+    public float getGreenComponentAmt()
+    {
+        return greenComponentAmt;
+    }
+
+    public void setGreenComponentAmt(float greenComponentAmt)
+    {
+        this.greenComponentAmt = greenComponentAmt;
+    }
+
+    public float getBlueComponentAmt()
+    {
+        return blueComponentAmt;
+    }
+
+    public void setBlueComponentAmt(float blueComponentAmt)
+    {
+        this.blueComponentAmt = blueComponentAmt;
+    }
+
+    public void setSplitTime(int splitTime)
+    {
+        this.splitTime = splitTime;
+    }
+
+    public void setMixTime(int mixTime)
+    {
+        this.mixTime = mixTime;
+    }
+
+    public void setShouldMix(boolean shouldDye)
+    {
+        this.shouldMix = shouldDye;
+    }
+
+    public void setCustomName(String customName)
+    {
+        this.customName = customName;
+    }
+    
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return NetworkManager.CHANNELS.getPacketFrom(new MessageTileEntityMixer(this));
     }
 }

@@ -3,17 +3,25 @@ package net.epoxide.bladecraft.proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.epoxide.bladecraft.client.gui.GuiForge;
+import net.epoxide.bladecraft.client.gui.GuiMixer;
+import net.epoxide.bladecraft.client.render.TileEntityForgeRenderer;
+import net.epoxide.bladecraft.client.render.TileEntityMixerRenderer;
 import net.epoxide.bladecraft.client.resource.IconMapping;
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.render.RenderItemSword;
+import net.epoxide.bladecraft.tileentity.TileEntityForge;
+import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ProxyClient extends ProxyCommon 
 {
@@ -29,17 +37,22 @@ public class ProxyClient extends ProxyCommon
         MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemSword());
         
         MinecraftForge.EVENT_BUS.register(new ItemIconHandler());
+        
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForge.class, new TileEntityForgeRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMixer.class, new TileEntityMixerRenderer());
     }
     
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te == null) return null;
         switch(ID)
         {
-            case Reference.DYER_GUI_ID:
-                return null;
+            case Reference.FORGE_GUI_ID:
+                return new GuiForge(player.inventory, (TileEntityForge)te);
             case Reference.MIXER_GUI_ID:
-                return null;
+                return new GuiMixer(player.inventory, (TileEntityMixer)te);
             default: return null;
         }
     }
