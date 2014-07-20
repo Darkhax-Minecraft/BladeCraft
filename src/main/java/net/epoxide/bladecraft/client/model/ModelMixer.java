@@ -45,17 +45,17 @@ public class ModelMixer extends ModelBase
         Rotor.mirror = true;
         setRotation(Rotor, 0F, 0F, 0F);
         FinOne = new ModelRenderer(this, 38, 0);
-        FinOne.addBox(0F, 0F, 0F, 6, 6, 0);
-        FinOne.setRotationPoint(-3F, 14F, 0F);
+        FinOne.addBox(0F, 0F, 0F, 6, 4, 0);
+        FinOne.setRotationPoint(-3F, 16F, 0F);
         FinOne.setTextureSize(106, 118);
         FinOne.mirror = true;
         setRotation(FinOne, 0F, 0F, 0F);
-        FinTwo = new ModelRenderer(this, 38, 0);
-        FinTwo.addBox(0F, 0F, 0F, 6, 6, 0);
-        FinTwo.setRotationPoint(0F, 14F, 3F);
+        FinTwo = new ModelRenderer(this, 38, -6);
+        FinTwo.addBox(0F, 0F, 0F, 0, 4, 6);
+        FinTwo.setRotationPoint(0F, 15F, -3F);
         FinTwo.setTextureSize(106, 118);
         FinTwo.mirror = true;
-        setRotation(FinTwo, 0F, 1.570796F, 0F);
+        setRotation(FinTwo, 0F, 0F, 0F);
         FinThree = new ModelRenderer(this, 38, 6);
         FinThree.addBox(0F, 0F, 0F, 4, 0, 1);
         FinThree.setRotationPoint(-0.5F, 8.5F, 2F);
@@ -173,6 +173,15 @@ public class ModelMixer extends ModelBase
         SideFour.render(f5);
     }
 
+    public void rotate()
+    {
+        Rotor.rotateAngleY += 0.01F;
+        FinOne.rotateAngleY += 0.01F;
+        FinTwo.rotateAngleY += 0.01F;
+        FinThree.rotateAngleY += 0.01F;
+        FinFour.rotateAngleY += 0.01F;
+    }
+    
     private void setRotation(ModelRenderer model, float x, float y, float z)
     {
         model.rotateAngleX = x;
@@ -189,5 +198,4 @@ public class ModelMixer extends ModelBase
     {
         
     }
-
 }

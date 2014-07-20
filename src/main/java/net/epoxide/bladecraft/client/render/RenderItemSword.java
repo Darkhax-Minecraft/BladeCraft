@@ -1,4 +1,4 @@
-package net.epoxide.bladecraft.render;
+package net.epoxide.bladecraft.client.render;
 
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.util.Reference;

@@ -3,13 +3,17 @@ package net.epoxide.bladecraft.proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.epoxide.bladecraft.block.BCBlocks;
 import net.epoxide.bladecraft.client.gui.GuiForge;
 import net.epoxide.bladecraft.client.gui.GuiMixer;
+import net.epoxide.bladecraft.client.model.ModelForge;
+import net.epoxide.bladecraft.client.model.ModelMixer;
+import net.epoxide.bladecraft.client.render.RenderItemSword;
 import net.epoxide.bladecraft.client.render.TileEntityForgeRenderer;
+import net.epoxide.bladecraft.client.render.TileEntityItemRenderer;
 import net.epoxide.bladecraft.client.render.TileEntityMixerRenderer;
 import net.epoxide.bladecraft.client.resource.IconMapping;
 import net.epoxide.bladecraft.handler.ItemIconHandler;
-import net.epoxide.bladecraft.render.RenderItemSword;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
@@ -22,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLLog;
 
 public class ProxyClient extends ProxyCommon 
 {
@@ -35,7 +40,9 @@ public class ProxyClient extends ProxyCommon
         MinecraftForgeClient.registerItemRenderer(Items.iron_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.golden_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemSword());
-        
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BCBlocks.forgeBlock), new TileEntityItemRenderer(new ModelForge()));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BCBlocks.mixerBlock), new TileEntityItemRenderer(new ModelMixer()));
+        FMLLog.severe("Registered Item Renderers");
         MinecraftForge.EVENT_BUS.register(new ItemIconHandler());
         
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForge.class, new TileEntityForgeRenderer());

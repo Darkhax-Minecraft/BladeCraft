@@ -1,4 +1,4 @@
-package net.epoxide.bladecraft.render;
+package net.epoxide.bladecraft.client.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;

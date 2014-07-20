@@ -1,19 +1,27 @@
 package net.epoxide.bladecraft.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.epoxide.bladecraft.Bladecraft;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockForge extends BlockContainer
 {
+    @SideOnly(Side.CLIENT)
+    public IIcon forgeSideIcon;
+    
+    @SideOnly(Side.CLIENT)
+    private IIcon forgeBottomIcon;
+    
     public BlockForge()
     {
         super(Material.iron);
@@ -49,5 +57,25 @@ public class BlockForge extends BlockContainer
             player.openGui(Bladecraft.instance, Reference.FORGE_GUI_ID, world, x, y, z);
             return true;
         }
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        if(side == 1)
+            return this.blockIcon;
+        if(side == 0)
+            return this.forgeBottomIcon;
+        return this.forgeSideIcon;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister register)
+    {
+        this.forgeBottomIcon = register.registerIcon(Reference.MOD_ID + ":blockForgeBottom");
+        this.forgeSideIcon = register.registerIcon(Reference.MOD_ID + ":blockForgeSide");
+        this.blockIcon = register.registerIcon(Reference.MOD_ID + ":blockForge");
     }
 }
