@@ -8,14 +8,18 @@ import net.epoxide.bladecraft.handler.ConfigurationHandler;
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -46,6 +50,15 @@ public class Bladecraft {
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
          
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+    }
+    
+    @EventHandler
+    public void onPostInit(FMLPostInitializationEvent event)
+    {
+        FMLLog.severe("Block ID: " + Block.getIdFromBlock(BCBlocks.forgeBlock));
+        FMLLog.severe("Item: " + Item.getItemById(Block.getIdFromBlock(BCBlocks.forgeBlock)));
+        
+        proxy.registerBlockItemRenderers();
     }
     
     @EventHandler

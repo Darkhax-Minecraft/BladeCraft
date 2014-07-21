@@ -17,11 +17,13 @@ import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,13 +42,18 @@ public class ProxyClient extends ProxyCommon
         MinecraftForgeClient.registerItemRenderer(Items.iron_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.golden_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemSword());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BCBlocks.forgeBlock), new TileEntityItemRenderer(new ModelForge()));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BCBlocks.mixerBlock), new TileEntityItemRenderer(new ModelMixer()));
+        
         FMLLog.severe("Registered Item Renderers");
         MinecraftForge.EVENT_BUS.register(new ItemIconHandler());
         
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForge.class, new TileEntityForgeRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMixer.class, new TileEntityMixerRenderer());
+    }
+    
+    public void registerBlockItemRenderers()
+    {
+        MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.forgeBlock)), new TileEntityItemRenderer(new ModelForge(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/forge.png")));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.mixerBlock)), new TileEntityItemRenderer(new ModelMixer(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer.png")));
     }
     
     @Override

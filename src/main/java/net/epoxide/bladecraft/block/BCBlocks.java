@@ -1,10 +1,10 @@
 package net.epoxide.bladecraft.block;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BCBlocks
 {

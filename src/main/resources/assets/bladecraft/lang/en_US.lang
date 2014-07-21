@@ -2,4 +2,6 @@ language.name=English
 language.region=US
 language.code=en_US
 
+tile.blockForge.name=Forge
+tile.blockMixer.name=Mixer
 itemGroup.bcCreativeTab=BladeCraft Default Swords
