@@ -67,6 +67,16 @@ public class TileEntityItemRenderer implements IItemRenderer
             GL11.glPopMatrix();
             GL11.glPopMatrix();
             break;
+        case ENTITY:
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.0F, 1.5F, 0.0F);
+            GL11.glPushMatrix();
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+            GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
+            model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, 0.0625F);
+            GL11.glPopMatrix();
+            GL11.glPopMatrix();
+            break;
         default:
             break;
         }
