@@ -3,9 +3,13 @@ package net.epoxide.bladecraft.client.gui;
 import net.epoxide.bladecraft.inventory.ContainerMixer;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -25,7 +29,13 @@ public class GuiMixer extends GuiContainer
     {
         String s = this.mixer.hasCustomInventoryName() ? this.mixer.getInventoryName() : I18n.format(this.mixer.getInventoryName(), new Object[0]);
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 98, 4210752);
+        
+        IIcon icon = Items.iron_ingot.getIconFromDamage(0);
+        Tessellator tess = Tessellator.instance;
+        int startX = 111;
+        int startY = 45;
+        this.drawTexturedModelRectFromIcon(startX, startY, icon, 16, 16);
     }
 
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
@@ -46,4 +56,5 @@ public class GuiMixer extends GuiContainer
         
         // TODO Apply rendering for dye progress in the mixer
     }
+
 }

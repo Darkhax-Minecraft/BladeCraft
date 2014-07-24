@@ -2,6 +2,8 @@ language.name=English
 language.region=US
 language.code=en_US
 
+container.bc.forge=Forge
+container.bc.mixer=Mixer
 tile.blockForge.name=Forge
 tile.blockMixer.name=Mixer
 itemGroup.bcCreativeTab=BladeCraft Default Swords

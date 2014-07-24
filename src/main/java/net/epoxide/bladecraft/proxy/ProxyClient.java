@@ -30,7 +30,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLLog;
 
-public class ProxyClient extends ProxyCommon 
+public class ProxyClient extends ProxyCommon
 {
     public static Map<Item, IconMapping> iconMap = new HashMap<Item, IconMapping>();
     
@@ -55,12 +55,19 @@ public class ProxyClient extends ProxyCommon
         MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.forgeBlock)), new TileEntityItemRenderer(new ModelForge(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/forge.png")));
         MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.mixerBlock)), new TileEntityItemRenderer(new ModelMixer(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer.png")));
     }
+   
+    public void addIconRegistration(ItemStack stack)
+    {
+        IconMapping mapping = IconMapping.buildMapping(stack);
+    }
     
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         TileEntity te = world.getTileEntity(x, y, z);
         if(te == null) return null;
+        FMLLog.severe("Constructing Gui for Forge");
+
         switch(ID)
         {
             case Reference.FORGE_GUI_ID:
@@ -69,10 +76,5 @@ public class ProxyClient extends ProxyCommon
                 return new GuiMixer(player.inventory, (TileEntityMixer)te);
             default: return null;
         }
-    }
-    
-    public void addIconRegistration(ItemStack stack)
-    {
-        IconMapping mapping = IconMapping.buildMapping(stack);
     }
 }

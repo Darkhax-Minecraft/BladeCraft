@@ -5,6 +5,7 @@ import java.util.Arrays;
 import net.epoxide.bladecraft.block.BCBlocks;
 import net.epoxide.bladecraft.command.CommandDye;
 import net.epoxide.bladecraft.handler.ConfigurationHandler;
+import net.epoxide.bladecraft.item.BCItems;
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
@@ -41,10 +42,12 @@ public class Bladecraft {
     {
         setModMeta(event.getModMetadata());
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
-        proxy.registerSidededEvents();
         
         BCBlocks.initialize();
+        BCItems.initialize();
         NetworkManager.initialize();
+        
+        proxy.registerSidededEvents();
         
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityForge.class, "BladeCraftForge");
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
@@ -54,10 +57,7 @@ public class Bladecraft {
     
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
-    {
-        FMLLog.severe("Block ID: " + Block.getIdFromBlock(BCBlocks.forgeBlock));
-        FMLLog.severe("Item: " + Item.getItemById(Block.getIdFromBlock(BCBlocks.forgeBlock)));
-        
+    {        
         proxy.registerBlockItemRenderers();
     }
     

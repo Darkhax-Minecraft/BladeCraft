@@ -85,7 +85,7 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     @Override
     public String getInventoryName()
     {
-        return (hasCustomInventoryName() ? "container.bc.dyer" : customName);
+        return (hasCustomInventoryName() ? customName : "container.bc.forge");
     }
 
     @Override

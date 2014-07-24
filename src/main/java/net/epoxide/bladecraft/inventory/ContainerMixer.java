@@ -16,9 +16,9 @@ public class ContainerMixer extends Container
         playerInv = inv;
         mixer = te;
         
-        this.addSlotToContainer(new Slot(playerInv, 0, 56, 17));
-        this.addSlotToContainer(new Slot(playerInv, 1, 56, 53));
-        this.addSlotToContainer(new SlotMixer(playerInv.player, playerInv, 2, 56, 110));
+        this.addSlotToContainer(new SlotDye(te, 0, 21, 18));
+        this.addSlotToContainer(new SlotSword(playerInv.player, te, 1, 83, 45, false));
+        this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 134, 45));
         
         int i;
 
@@ -26,13 +26,13 @@ public class ContainerMixer extends Container
         {
             for (int j = 0; j < 9; ++j)
             {
-                this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 4 + j * 19, 79 + i * 19));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            this.addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 142));
+            this.addSlotToContainer(new Slot(playerInv, i, 4 + i * 19, 140));
         }
     }
 

@@ -1,14 +1,19 @@
 package net.epoxide.bladecraft.client.gui;
 
 import net.epoxide.bladecraft.inventory.ContainerForge;
+import net.epoxide.bladecraft.item.BCItems;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.FMLLog;
 
 public class GuiForge extends GuiContainer
 {
@@ -18,6 +23,7 @@ public class GuiForge extends GuiContainer
     public GuiForge(InventoryPlayer inventory, TileEntityForge te)
     {
         super(new ContainerForge(inventory, te));
+        FMLLog.severe("Constructing GUI for Forge");
         forge = te;
     }
 
@@ -25,7 +31,7 @@ public class GuiForge extends GuiContainer
     {
         String s = this.forge.hasCustomInventoryName() ? this.forge.getInventoryName() : I18n.format(this.forge.getInventoryName(), new Object[0]);
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 98, 4210752);
     }
 
     public void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
