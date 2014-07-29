@@ -1,8 +1,11 @@
 package net.epoxide.bladecraft.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -56,7 +59,7 @@ public class RenderItemSword implements IItemRenderer {
         switch (type) {
 
         case EQUIPPED: {
-
+            
             renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, true);
             break;
         }
@@ -68,14 +71,17 @@ public class RenderItemSword implements IItemRenderer {
         }
 
         case INVENTORY: {
-
+            
             renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, false);
             break;
         }
 
+        
         case ENTITY: {
-
+            GL11.glPushMatrix();
+            GL11.glTranslatef(-0.56F, -0.3F, 0);
             renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, true, true);
+            GL11.glPopMatrix();
             break;
         }
         default:
@@ -108,5 +114,16 @@ public class RenderItemSword implements IItemRenderer {
             if (insetrgb != null)
                 RenderItemHelper.renderIconInInventory(inset, insetrgb[0], insetrgb[1], insetrgb[2]);
         }
+    }
+    
+    private void renderIcon(int x, int y, IIcon icon)
+    {
+        Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(x, y, 1, icon.getMinU(), icon.getMinV());
+        tess.addVertexWithUV(x + 16, y, 1, icon.getMinU(), icon.getMaxV());
+        tess.addVertexWithUV(x + 16, y + 16, 1, icon.getMaxU(), icon.getMaxV());
+        tess.addVertexWithUV(x, y + 16, 1, icon.getMaxU(), icon.getMinV());
+        tess.draw();
     }
 }

@@ -29,7 +29,7 @@ public class BlockForge extends BlockContainer
 
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)
-    {
+    {   
         return new TileEntityForge();
     }
 
