@@ -20,11 +20,6 @@ public class SlotAlloy extends Slot
     {
         return stack.getItem() instanceof ItemAlloy;
     }
-    
-    public ItemStack decrStackSize(int amt)
-    {
-        return super.decrStackSize(amt);
-    }
 
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack)
     {

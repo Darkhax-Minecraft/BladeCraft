@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -22,6 +23,7 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
     public float greenCompAmt;
     public float blueCompAmt;
     public String customName;
+    public String hexStr;
     
     public MessageTileEntityMixer() {}
     
@@ -37,6 +39,7 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         this.greenCompAmt = mixer.getGreenComponentAmt();
         this.blueCompAmt = mixer.getBlueComponentAmt();
         this.customName = mixer.getCustomName();
+        this.hexStr = mixer.getHexStr();
     }
     
     @Override
@@ -52,6 +55,7 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         this.greenCompAmt = buffer.readFloat();
         this.blueCompAmt = buffer.readFloat();
         this.customName = new String(buffer.readBytes(buffer.readInt()).array());
+        this.hexStr = new String(buffer.readBytes(buffer.readInt()).array());
     }
 
     @Override
@@ -68,6 +72,8 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         buffer.writeFloat(this.blueCompAmt);
         buffer.writeInt(this.customName.length());
         buffer.writeBytes(this.customName.getBytes());
+        buffer.writeInt(this.hexStr.length());
+        buffer.writeBytes(this.hexStr.getBytes());
     }
 
     @Override
@@ -84,6 +90,7 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
             ((TileEntityMixer) te).setGreenComponentAmt(message.greenCompAmt);
             ((TileEntityMixer) te).setBlueComponentAmt(message.blueCompAmt);
             ((TileEntityMixer) te).setCustomName(message.customName);
+            ((TileEntityMixer) te).setHexStr(message.hexStr);
         }
         
         return null;

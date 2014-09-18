@@ -1,17 +1,15 @@
 package net.epoxide.bladecraft.item.crafting;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
-
-import com.google.common.collect.Maps;
 
 public class DyeableItems
 {
     private static final RGBEntry NULL_ENTRY = new RGBEntry(0, 0, 0);
-    private static Map<DyeEntry, RGBEntry> dyeables = Maps.newHashMap();
+    private static Map<Integer, RGBEntry> dyeables = new HashMap<Integer, RGBEntry>();
     
     static 
     {
@@ -20,16 +18,15 @@ public class DyeableItems
     
     public static RGBEntry getDyeComponentValue(ItemStack itemstack)
     {
-        DyeEntry entry = new DyeEntry(itemstack.getItem(), itemstack.getItemDamage());
-        if(dyeables.containsKey(entry))
-            return dyeables.get(entry);
+        if(dyeables.containsKey(itemstack.getItemDamage()))
+            return dyeables.get(itemstack.getItemDamage());
         return NULL_ENTRY;
     }
 
     private static void registerDyes()
     {
         for(int metadata = 0; metadata < 16; metadata++)
-            dyeables.put(new DyeEntry(Items.dye, metadata), calculateEntryFromColorValue(metadata));
+            dyeables.put(metadata, calculateEntryFromColorValue(metadata));
     }
 
     /**

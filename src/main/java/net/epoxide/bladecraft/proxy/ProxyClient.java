@@ -8,12 +8,14 @@ import net.epoxide.bladecraft.client.gui.GuiForge;
 import net.epoxide.bladecraft.client.gui.GuiMixer;
 import net.epoxide.bladecraft.client.model.ModelForge;
 import net.epoxide.bladecraft.client.model.ModelMixer;
+import net.epoxide.bladecraft.client.render.RenderItemAlloy;
 import net.epoxide.bladecraft.client.render.RenderItemSword;
 import net.epoxide.bladecraft.client.render.TileEntityForgeRenderer;
 import net.epoxide.bladecraft.client.render.TileEntityItemRenderer;
 import net.epoxide.bladecraft.client.render.TileEntityMixerRenderer;
 import net.epoxide.bladecraft.client.resource.IconMapping;
 import net.epoxide.bladecraft.handler.ItemIconHandler;
+import net.epoxide.bladecraft.item.BCItems;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
@@ -37,13 +39,16 @@ public class ProxyClient extends ProxyCommon
     @Override
     public void registerSidededEvents() 
     {
+        // Modify Vanilla renders
         MinecraftForgeClient.registerItemRenderer(Items.wooden_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.stone_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.iron_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.golden_sword, new RenderItemSword());
         MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemSword());
         
-        FMLLog.severe("Registered Item Renderers");
+        // Add custom render for Mod items that need them
+        MinecraftForgeClient.registerItemRenderer(BCItems.alloy, new RenderItemAlloy());
+        
         MinecraftForge.EVENT_BUS.register(new ItemIconHandler());
         
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForge.class, new TileEntityForgeRenderer());

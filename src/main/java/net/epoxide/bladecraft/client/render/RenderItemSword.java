@@ -1,15 +1,16 @@
 package net.epoxide.bladecraft.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
 
 public class RenderItemSword implements IItemRenderer {
 
@@ -27,7 +28,6 @@ public class RenderItemSword implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-
         IIcon iconSword;
         IIcon iconBlade = ItemIconHandler.getIconBlade();
         IIcon iconHilt = ItemIconHandler.getIconHilt();
@@ -46,13 +46,13 @@ public class RenderItemSword implements IItemRenderer {
         float[] inset = null;
 
         if (!item.stackTagCompound.getString(Reference.BLADE_HEX_NBT_KEY).equalsIgnoreCase("Unset"))
-            blade = Utilities.getRBGFromHex(item.stackTagCompound.getString(Reference.BLADE_HEX_NBT_KEY));
+            blade = Utilities.getRGBFromHex(item.stackTagCompound.getString(Reference.BLADE_HEX_NBT_KEY));
 
         if (!item.stackTagCompound.getString(Reference.HILT_HEX_NBT_KEY).equalsIgnoreCase("Unset"))
-            hilt = Utilities.getRBGFromHex(item.stackTagCompound.getString(Reference.HILT_HEX_NBT_KEY));
+            hilt = Utilities.getRGBFromHex(item.stackTagCompound.getString(Reference.HILT_HEX_NBT_KEY));
 
         if (!item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY).equalsIgnoreCase("Unset"))
-            inset = Utilities.getRBGFromHex(item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
+            inset = Utilities.getRGBFromHex(item.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY));
 
         iconSword = item.getIconIndex();
 
@@ -71,7 +71,7 @@ public class RenderItemSword implements IItemRenderer {
         }
 
         case INVENTORY: {
-            
+
             renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, false);
             break;
         }
@@ -105,25 +105,15 @@ public class RenderItemSword implements IItemRenderer {
 
         else {
 
+            
             RenderItemHelper.renderIconInInventory(itemIcon, -1f, -1f, -1f);
-
-            if (bladergb != null)
-                RenderItemHelper.renderIconInInventory(blade, bladergb[0], bladergb[1], bladergb[2]);
+            
             if (hiltrgb != null)
                 RenderItemHelper.renderIconInInventory(hilt, hiltrgb[0], hiltrgb[1], hiltrgb[2]);
             if (insetrgb != null)
-                RenderItemHelper.renderIconInInventory(inset, insetrgb[0], insetrgb[1], insetrgb[2]);
+                RenderItemHelper.renderIconInInventory(inset, insetrgb[0], insetrgb[1], insetrgb[2]); 
+            if (bladergb != null)
+                RenderItemHelper.renderIconInInventory(blade, bladergb[0], bladergb[1], bladergb[2]);
         }
-    }
-    
-    private void renderIcon(int x, int y, IIcon icon)
-    {
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
-        tess.addVertexWithUV(x, y, 1, icon.getMinU(), icon.getMinV());
-        tess.addVertexWithUV(x + 16, y, 1, icon.getMinU(), icon.getMaxV());
-        tess.addVertexWithUV(x + 16, y + 16, 1, icon.getMaxU(), icon.getMaxV());
-        tess.addVertexWithUV(x, y + 16, 1, icon.getMaxU(), icon.getMinV());
-        tess.draw();
     }
 }

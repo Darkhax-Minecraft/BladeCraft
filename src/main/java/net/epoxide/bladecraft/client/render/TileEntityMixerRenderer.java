@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.epoxide.bladecraft.client.model.ModelMixer;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
+import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
@@ -21,7 +22,6 @@ public class TileEntityMixerRenderer extends TileEntitySpecialRenderer
         if(te instanceof TileEntityMixer)
         {
             model.setTileEntity((TileEntityMixer)te);
-            model.rotate();
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -31,7 +31,9 @@ public class TileEntityMixerRenderer extends TileEntitySpecialRenderer
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             model.render((Entity)null, (float)f, (float)f1, (float)f2, (float)f3, 0.0625F, 0.0625F);
             Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer_overlay.png"));
-            GL11.glColor3f(0.8F, 0.3F, 0.3F);
+            String hex = ((TileEntityMixer) te).getHexStr();
+            float[] hexValue = Utilities.getRGBFromHex(hex);
+            GL11.glColor3f(hexValue[0], hexValue[1], hexValue[2]);
             model.render((Entity)null, (float)f, (float)f1, (float)f2, (float)f3, 0.0625F, 0.0625F);
             GL11.glPopMatrix();
             GL11.glDisable(GL11.GL_BLEND);

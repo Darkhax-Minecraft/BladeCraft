@@ -1,5 +1,7 @@
 package net.epoxide.bladecraft.tileentity;
 
+import java.util.Map;
+
 import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.epoxide.bladecraft.network.NetworkManager;
@@ -14,14 +16,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 
 public class TileEntityMixer extends TileEntity implements ISidedInventory
 {
-    private static float maxComponentAmt = 18432.0F;
+    private static float maxComponentAmt = 250.0F;
 
     // 5 second split time by default. Considering customizability via
     // Configuration file
-    public static final int timeToSplit = 10 * 20;
+    public static final int timeToSplit = 1;
     public static final int timeToDye = 2 * 60 * 20;
 
     private int splitTime = 0;
@@ -32,7 +35,14 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     private float blueComponentAmt = 0;
     private String customName = "";
     private ItemStack[] mixerStacks = new ItemStack[3];
+    private String hexStr;
 
+    public TileEntityMixer()
+    {
+        super();
+        this.hexStr = "FFFFFF";
+    }
+    
     @Override
     public int getSizeInventory()
     {
@@ -42,6 +52,8 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     @Override
     public ItemStack getStackInSlot(int slotInd)
     {
+        if(slotInd > mixerStacks.length - 1 || slotInd < 0)
+            return null;
         return mixerStacks[slotInd];
     }
 
@@ -138,11 +150,24 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             }
         }
 
-        splitTime = nbtTagCompound.getShort("SplitTime");
+        this.redComponentAmt = nbtTagCompound.getFloat("RedComponentAmount");
+        this.greenComponentAmt = nbtTagCompound.getFloat("GreenComponentAmount");
+        this.blueComponentAmt = nbtTagCompound.getFloat("BlueComponentAmount");
 
+        this.splitTime = nbtTagCompound.getShort("SplitTime");
+
+        if(nbtTagCompound.hasKey("ColorString"))
+        {
+            this.hexStr = nbtTagCompound.getString("ColorString");
+        }
+        else
+        {
+            this.hexStr = "FFFFFF";
+        }
+        
         if (nbtTagCompound.hasKey("CustomName", 8))
         {
-            customName = nbtTagCompound.getString("CustomName");
+            this.customName = nbtTagCompound.getString("CustomName");
         }
     }
 
@@ -163,9 +188,22 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                 itemList.appendTag(nbtTag);
             }
         }
-
+        
+        nbtTagCompound.setFloat("RedComponentAmount", this.redComponentAmt);
+        nbtTagCompound.setFloat("GreenComponentAmount", this.greenComponentAmt);
+        nbtTagCompound.setFloat("BlueComponentAmount", this.blueComponentAmt);
+        
         nbtTagCompound.setTag("Items", itemList);
-
+        
+        if(this.hexStr == null)
+        {
+            nbtTagCompound.setString("ColorString", "FFFFFF");
+        }
+        else
+        {
+            nbtTagCompound.setString("ColorString", this.hexStr);
+        }
+        
         if (this.hasCustomInventoryName())
         {
             nbtTagCompound.setString("CustomName", customName);
@@ -181,7 +219,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             if (mixerStacks[0] != null && hasSpaceForComponents())
             {
                 ++splitTime;
-                if (splitTime == timeToSplit)
+                if (splitTime >= timeToSplit)
                 {
                     splitTime = 0;
                     performDyeSplit();
@@ -207,9 +245,12 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         }
 
         if (requiresUpdate)
+        {
+            NetworkManager.sendMessage(new MessageTileEntityMixer(this));
             markDirty();
+        }
     }
-
+    
     private void performItemDyeing()
     {
         ItemStack stack = applyDye(mixerStacks[1]);
@@ -234,7 +275,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     private boolean hasSpaceForComponents()
     {
-        RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[1]);
+        RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[0]);
         float tempRed = redComponentAmt + entry.getRed();
         float tempGreen = greenComponentAmt + entry.getGreen();
         float tempBlue = blueComponentAmt + entry.getBlue();
@@ -247,9 +288,10 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     private void performDyeSplit()
     {
         RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[0]);
-        redComponentAmt += entry.getRed();
-        greenComponentAmt += entry.getGreen();
-        blueComponentAmt += entry.getBlue();
+        System.err.println(String.format("Red: %f, Green: %f, Blue: %f", entry.getRed(), entry.getGreen(), entry.getBlue()));
+        redComponentAmt += entry.getRed() * 3;
+        greenComponentAmt += entry.getGreen() * 3;
+        blueComponentAmt += entry.getBlue() * 3;
         mixerStacks[0].stackSize--;
         if (mixerStacks[0].stackSize == 0)
         {
@@ -303,17 +345,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         return false;
     }
 
-    public void sendSplitUpdate()
-    {
-        // TODO Write netty implementation for sending split updates to the
-        // server, i.e. notify server to begin dye split.
-    }
-
-    public void sendDyeUpdate(String hexKey)
-    {
-        // TODO Write netty implementation for sending dye updates to the
-        // server, i.e. notify the server when the player elects to begin dyeing the item.
-    }
 
     public int getSplitProgressScaled(int i)
     {
@@ -416,6 +447,41 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     @Override
     public Packet getDescriptionPacket()
     {
-        return NetworkManager.CHANNELS.getPacketFrom(new MessageTileEntityMixer(this));
+        return NetworkManager.getPacket(new MessageTileEntityMixer(this));
+    }
+    
+    public void displayData(EntityPlayer player)
+    {
+        player.addChatMessage(new ChatComponentText(String.format("Amount of colors: (Red: %.2f, Green: %.2f, Blue: %.2f)", this.redComponentAmt, this.greenComponentAmt, this.blueComponentAmt)));
+    }
+
+    public float getRedComponentPercentage()
+    {
+        return (this.redComponentAmt / this.maxComponentAmt);
+    }
+
+    public float getGreenComponentPercentage()
+    {
+        return (this.greenComponentAmt / this.maxComponentAmt);
+    }
+    
+    public float getBlueComponentPercentage()
+    {
+        return (this.blueComponentAmt / this.maxComponentAmt);
+    }
+
+    private String[] buildArrayFromMap(Map<Integer, String> layerIDHexMap)
+    {
+        return layerIDHexMap.values().toArray(new String[layerIDHexMap.values().size()]);
+    }
+
+    public void setHexStr(String hexStr)
+    {
+        this.hexStr = hexStr;
+    }
+
+    public String getHexStr()
+    {
+        return this.hexStr;
     }
 }

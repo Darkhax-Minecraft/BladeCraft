@@ -29,6 +29,4 @@ public class DyeEntry
             return true;
         return false;
     }
-
-
 }

@@ -34,7 +34,7 @@ public class RenderItemHelper {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         if (red >= 0 && green >= 0 && blue >= 0)
-            GL11.glColor3f(red / 256, green / 256, blue / 256);
+            GL11.glColor3f(red, green, blue);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         ItemRenderer.renderItemIn2D(tessellator, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
         GL11.glDisable(GL11.GL_BLEND);
@@ -44,12 +44,11 @@ public class RenderItemHelper {
     public static void renderIconInInventory(IIcon icon, float red, float green, float blue) {
 
         RenderItem renderItem = new RenderItem();
-
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         if (red >= 0 && green >= 0 && blue >= 0)
-            GL11.glColor3f(red / 256, green / 256, blue / 256);
+            GL11.glColor3f(red, green, blue);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         renderItem.renderIcon(0, 0, icon, 16, 16);

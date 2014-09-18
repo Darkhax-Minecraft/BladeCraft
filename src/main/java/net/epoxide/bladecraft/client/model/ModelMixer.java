@@ -172,15 +172,6 @@ public class ModelMixer extends ModelBase
         SideThree.render(f5);
         SideFour.render(f5);
     }
-
-    public void rotate()
-    {
-        Rotor.rotateAngleY += 0.01F;
-        FinOne.rotateAngleY += 0.01F;
-        FinTwo.rotateAngleY += 0.01F;
-        FinThree.rotateAngleY += 0.01F;
-        FinFour.rotateAngleY += 0.01F;
-    }
     
     private void setRotation(ModelRenderer model, float x, float y, float z)
     {

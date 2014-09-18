@@ -216,17 +216,12 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
         this.customName = customName;
     }
 
-    public void sendDyeUpdate(int red, int green, int blue)
-    {
-        // TODO Utilize netty network implementation to send coloring updates to server based on client events.
-    }
-
-    public boolean isDyeing()
+    public boolean isForging()
     {
         return forgingTime > 0;
     }
 
-    public int getDyeProgressScaled(int i)
+    public int getForgeProgressScaled(int i)
     {
         // TODO Actually write the dyeProgress code
         return 0;
@@ -241,6 +236,6 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     @Override
     public Packet getDescriptionPacket()
     {
-        return NetworkManager.CHANNELS.getPacketFrom(new MessageTileEntityForge(this));
+        return NetworkManager.getPacket(new MessageTileEntityForge(this));
     }
 }

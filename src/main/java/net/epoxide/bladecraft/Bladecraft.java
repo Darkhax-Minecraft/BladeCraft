@@ -4,17 +4,19 @@ import java.util.Arrays;
 
 import net.epoxide.bladecraft.block.BCBlocks;
 import net.epoxide.bladecraft.command.CommandDye;
+import net.epoxide.bladecraft.event.ToolTipEventHandler;
 import net.epoxide.bladecraft.handler.ConfigurationHandler;
 import net.epoxide.bladecraft.item.BCItems;
+import net.epoxide.bladecraft.item.crafting.DyeableItems;
+import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.ModMetadata;
@@ -42,7 +44,7 @@ public class Bladecraft {
     {
         setModMeta(event.getModMetadata());
         new ConfigurationHandler(event.getSuggestedConfigurationFile());
-        
+        MinecraftForge.EVENT_BUS.register(new ToolTipEventHandler());
         BCBlocks.initialize();
         BCItems.initialize();
         NetworkManager.initialize();
@@ -59,6 +61,8 @@ public class Bladecraft {
     public void onPostInit(FMLPostInitializationEvent event)
     {        
         proxy.registerBlockItemRenderers();
+        RGBEntry entry = DyeableItems.getDyeComponentValue(new ItemStack(Items.dye, 1, 0));
+        System.err.println(String.format("Red: %f, Green: %f, Blue: %f", entry.getRed(), entry.getGreen(), entry.getBlue()));
     }
     
     @EventHandler

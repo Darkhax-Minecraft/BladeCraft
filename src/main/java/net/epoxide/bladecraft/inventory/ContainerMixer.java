@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class ContainerMixer extends Container
 {
@@ -17,7 +18,7 @@ public class ContainerMixer extends Container
         mixer = te;
         
         this.addSlotToContainer(new SlotDye(te, 0, 21, 18));
-        this.addSlotToContainer(new SlotSword(playerInv.player, te, 1, 83, 45, false));
+        this.addSlotToContainer(new SlotAlloy(playerInv.player, te, 1, 83, 45));
         this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 134, 45));
         
         int i;
@@ -40,5 +41,13 @@ public class ContainerMixer extends Container
     public boolean canInteractWith(EntityPlayer player)
     {
         return mixer.isUseableByPlayer(player);
+    }
+    
+    public ItemStack slotClick(int slotIndex, int p_75144_2_, int type, EntityPlayer player)
+    {
+        //if(type != 1)
+            return super.slotClick(slotIndex, p_75144_2_, type, player);
+        //ItemStack stack = this.mixer.getStackInSlot(slotIndex);
+        //return stack;
     }
 }
