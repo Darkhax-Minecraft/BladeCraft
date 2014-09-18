@@ -3,7 +3,7 @@ package net.epoxide.bladecraft.client.render;
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,8 +12,10 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderItemSword implements IItemRenderer {
-
+public class RenderItemSword implements IItemRenderer 
+{
+    private RenderItem render = new RenderItem();
+    
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
 
@@ -60,19 +62,19 @@ public class RenderItemSword implements IItemRenderer {
 
         case EQUIPPED: {
             
-            renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, true);
+            renderItem(type,item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, true);
             break;
         }
 
         case EQUIPPED_FIRST_PERSON: {
 
-            renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, true);
+            renderItem(type,item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, true);
             break;
         }
 
         case INVENTORY: {
 
-            renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, false);
+            renderItem(type,item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, false, false);
             break;
         }
 
@@ -80,7 +82,7 @@ public class RenderItemSword implements IItemRenderer {
         case ENTITY: {
             GL11.glPushMatrix();
             GL11.glTranslatef(-0.56F, -0.3F, 0);
-            renderItem(item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, true, true);
+            renderItem(type, item, iconSword, iconBlade, blade, iconHilt, hilt, iconInset, inset, true, true);
             GL11.glPopMatrix();
             break;
         }
@@ -89,11 +91,11 @@ public class RenderItemSword implements IItemRenderer {
         }
     }
 
-    private void renderItem(ItemStack item, IIcon itemIcon, IIcon blade, float[] bladergb, IIcon hilt, float[] hiltrgb, IIcon inset, float[] insetrgb, boolean isEntity, boolean is3d) {
+    private void renderItem(ItemRenderType type, ItemStack item, IIcon itemIcon, IIcon blade, float[] bladergb, IIcon hilt, float[] hiltrgb, IIcon inset, float[] insetrgb, boolean isEntity, boolean is3d) {
 
         if (is3d) {
 
-            RenderItemHelper.drawIconIn3D(item, itemIcon, isEntity, -1f, -1f, -1f);
+            RenderItemHelper.drawIconIn3D(item, itemIcon, isEntity);
 
             if (bladergb != null)
                 RenderItemHelper.drawIconIn3D(item, blade, isEntity, bladergb[0], bladergb[1], bladergb[2]);
@@ -104,9 +106,8 @@ public class RenderItemSword implements IItemRenderer {
         }
 
         else {
-
-            
-            RenderItemHelper.renderIconInInventory(itemIcon, -1f, -1f, -1f);
+                boolean hasColor = bladergb != null || hiltrgb != null || insetrgb != null;
+                RenderItemHelper.renderIconInInventory(item, itemIcon, type, hasColor);
             
             if (hiltrgb != null)
                 RenderItemHelper.renderIconInInventory(hilt, hiltrgb[0], hiltrgb[1], hiltrgb[2]);
@@ -114,6 +115,11 @@ public class RenderItemSword implements IItemRenderer {
                 RenderItemHelper.renderIconInInventory(inset, insetrgb[0], insetrgb[1], insetrgb[2]); 
             if (bladergb != null)
                 RenderItemHelper.renderIconInInventory(blade, bladergb[0], bladergb[1], bladergb[2]);
+            
+            if(item.hasEffect(0))
+            {
+                render.renderEffect(Minecraft.getMinecraft().renderEngine, 0, 0);
+            }
         }
     }
 }
