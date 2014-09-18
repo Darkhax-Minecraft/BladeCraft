@@ -1,8 +1,5 @@
 package net.epoxide.bladecraft.proxy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.epoxide.bladecraft.block.BCBlocks;
 import net.epoxide.bladecraft.client.gui.GuiForge;
 import net.epoxide.bladecraft.client.gui.GuiMixer;
@@ -13,7 +10,6 @@ import net.epoxide.bladecraft.client.render.RenderItemSword;
 import net.epoxide.bladecraft.client.render.TileEntityForgeRenderer;
 import net.epoxide.bladecraft.client.render.TileEntityItemRenderer;
 import net.epoxide.bladecraft.client.render.TileEntityMixerRenderer;
-import net.epoxide.bladecraft.client.resource.IconMapping;
 import net.epoxide.bladecraft.handler.ItemIconHandler;
 import net.epoxide.bladecraft.item.BCItems;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
@@ -23,19 +19,15 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLLog;
 
 public class ProxyClient extends ProxyCommon
-{
-    public static Map<Item, IconMapping> iconMap = new HashMap<Item, IconMapping>();
-    
+{    
     @Override
     public void registerSidededEvents() 
     {
@@ -60,18 +52,12 @@ public class ProxyClient extends ProxyCommon
         MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.forgeBlock)), new TileEntityItemRenderer(new ModelForge(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/forge.png")));
         MinecraftForgeClient.registerItemRenderer(Item.getItemById(Block.getIdFromBlock(BCBlocks.mixerBlock)), new TileEntityItemRenderer(new ModelMixer(), new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer.png")));
     }
-   
-    public void addIconRegistration(ItemStack stack)
-    {
-        IconMapping mapping = IconMapping.buildMapping(stack);
-    }
     
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         TileEntity te = world.getTileEntity(x, y, z);
         if(te == null) return null;
-        FMLLog.severe("Constructing Gui for Forge");
 
         switch(ID)
         {

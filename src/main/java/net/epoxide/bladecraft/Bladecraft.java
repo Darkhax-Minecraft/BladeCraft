@@ -72,7 +72,6 @@ public class Bladecraft {
         manager.registerCommand(new CommandDye());
     }
 
-
     private void setModMeta(ModMetadata meta) 
     {
         // TODO add more details
@@ -84,29 +83,5 @@ public class Bladecraft {
         meta.description = "A mod that provides the ability to color swords.";
         meta.logoFile = "";
         meta.url = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1288864-1-5-2-forge-bladecraft-ssp-smp-lan";
-    }
-    
-    @EventHandler
-    public void onIMCMessage(FMLInterModComms.IMCEvent event)
-    {
-        for(FMLInterModComms.IMCMessage message : event.getMessages())
-        {
-            if(message.isItemStackMessage())
-            {
-                ItemStack stack = message.getItemStackValue();
-                if(stack.hasTagCompound())
-                {
-                    if(isValidMessage(stack))
-                    {
-                        proxy.addIconRegistration(stack);
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean isValidMessage(ItemStack stack)
-    {
-        return stack.getItem() != null && stack.stackTagCompound.hasKey("bladeIconLoc") && stack.stackTagCompound.hasKey("insetIconLoc") && stack.stackTagCompound.hasKey("hiltIconLoc");
     }
 }
