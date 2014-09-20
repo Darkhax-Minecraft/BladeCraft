@@ -18,7 +18,6 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
     public int z;
     public int splitTime;
     public int mixTime;
-    public boolean shouldMix;
     public float redCompAmt;
     public float greenCompAmt;
     public float blueCompAmt;
@@ -34,7 +33,6 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         this.z = mixer.zCoord;
         this.splitTime = mixer.getSplitTime();
         this.mixTime = mixer.getMixTime();
-        this.shouldMix = mixer.getShouldMix();
         this.redCompAmt = mixer.getRedComponentAmt();
         this.greenCompAmt = mixer.getGreenComponentAmt();
         this.blueCompAmt = mixer.getBlueComponentAmt();
@@ -50,7 +48,6 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         this.z = buffer.readInt();
         this.splitTime = buffer.readInt();
         this.mixTime = buffer.readInt();
-        this.shouldMix = buffer.readBoolean();
         this.redCompAmt = buffer.readFloat();
         this.greenCompAmt = buffer.readFloat();
         this.blueCompAmt = buffer.readFloat();
@@ -66,7 +63,6 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         buffer.writeInt(this.z);
         buffer.writeInt(this.splitTime);
         buffer.writeInt(this.mixTime);
-        buffer.writeBoolean(this.shouldMix);
         buffer.writeFloat(this.redCompAmt);
         buffer.writeFloat(this.greenCompAmt);
         buffer.writeFloat(this.blueCompAmt);
@@ -85,7 +81,6 @@ public class MessageTileEntityMixer implements IMessage, IMessageHandler<Message
         {
             ((TileEntityMixer) te).setSplitTime(message.splitTime);
             ((TileEntityMixer) te).setMixTime(message.mixTime);
-            ((TileEntityMixer) te).setShouldMix(message.shouldMix);
             ((TileEntityMixer) te).setRedComponentAmt(message.redCompAmt);
             ((TileEntityMixer) te).setGreenComponentAmt(message.greenCompAmt);
             ((TileEntityMixer) te).setBlueComponentAmt(message.blueCompAmt);

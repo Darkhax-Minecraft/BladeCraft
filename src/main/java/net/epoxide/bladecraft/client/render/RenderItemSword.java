@@ -106,7 +106,7 @@ public class RenderItemSword implements IItemRenderer
         }
 
         else {
-                boolean hasColor = bladergb != null || hiltrgb != null || insetrgb != null;
+                boolean hasColor = bladergb != null && hiltrgb != null && insetrgb != null;
                 RenderItemHelper.renderIconInInventory(item, itemIcon, type, hasColor);
             
             if (hiltrgb != null)

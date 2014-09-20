@@ -1,8 +1,8 @@
 package net.epoxide.bladecraft.network;
 
-import net.epoxide.bladecraft.network.message.MessageNotifyServerMixing;
 import net.epoxide.bladecraft.network.message.MessageTileEntityForge;
 import net.epoxide.bladecraft.network.message.MessageTileEntityMixer;
+import net.epoxide.bladecraft.network.message.MessageUpdateForgeLayer;
 import net.epoxide.bladecraft.network.message.MessageUpdateMixerValues;
 import net.minecraft.network.Packet;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -20,8 +20,9 @@ public class NetworkManager
     {
         addMessage(MessageTileEntityForge.class, MessageTileEntityForge.class, Side.CLIENT);
         addMessage(MessageTileEntityMixer.class, MessageTileEntityMixer.class, Side.CLIENT);
-        addMessage(MessageNotifyServerMixing.class, MessageNotifyServerMixing.class, Side.SERVER);
+        //addMessage(MessageNotifyServerMixing.class, MessageNotifyServerMixing.class, Side.SERVER);
         addMessage(MessageUpdateMixerValues.class, MessageUpdateMixerValues.class, Side.SERVER);
+        addMessage(MessageUpdateForgeLayer.class, MessageUpdateForgeLayer.class, Side.SERVER);
     }
     
     public static void sendMessage(IMessage msg)

@@ -6,6 +6,7 @@ import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.network.message.MessageTileEntityMixer;
+import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -25,11 +26,10 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     // 5 second split time by default. Considering customizability via
     // Configuration file
     public static final int timeToSplit = 1;
-    public static final int timeToDye = 2 * 60 * 20;
+    public static final int timeToDye = 30 * 20;
 
     private int splitTime = 0;
     private int mixTime = 0;
-    private boolean shouldMix = false;
     private float redComponentAmt = 0;
     private float greenComponentAmt = 0;
     private float blueComponentAmt = 0;
@@ -232,14 +232,20 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                     splitTime = 0;
             }
 
-            if (mixerStacks[1] != null && shouldMix)
+            if (mixerStacks[1] != null)
             {
-                ++mixTime;
-                if (mixTime == timeToDye)
+                float[] colorValues = Utilities.getRGBFromHex(this.hexStr);
+                if(hasEnoughPigment(colorValues))
                 {
-                    mixTime = 0;
-                    performItemDyeing();
-                    requiresUpdate = true;
+                    ++mixTime;
+                    System.err.println(mixTime);
+                    if (mixTime == timeToDye)
+                    {
+                        mixTime = 0;
+                        performItemDyeing();
+                        updateComponentAmounts();
+                        requiresUpdate = true;
+                    }
                 }
             }
         }
@@ -251,19 +257,31 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         }
     }
     
+    private void updateComponentAmounts()
+    {
+        float[] colorValues = Utilities.getRGBFromHex(this.hexStr);
+        this.redComponentAmt -= colorValues[0];
+        this.greenComponentAmt -= colorValues[1];
+        this.blueComponentAmt -= colorValues[2];
+    }
+
+    private boolean hasEnoughPigment(float[] colorValues)
+    {
+        return (colorValues[0] < this.redComponentAmt && colorValues[1] < this.greenComponentAmt && colorValues[2] < this.blueComponentAmt);
+    }
+
     private void performItemDyeing()
     {
         ItemStack stack = applyDye(mixerStacks[1]);
         mixerStacks[2] = stack;
         mixerStacks[1] = null;
-        shouldMix = false;
     }
 
     private ItemStack applyDye(ItemStack itemStack)
     {
         ItemStack stack = itemStack.copy();
         Utilities.prepareStack(stack);
-        stack.setTagCompound(buildColorTag(stack.getTagCompound()));
+        stack.stackTagCompound.setString(Reference.ALLOY_COLOR_TAG, this.hexStr);
         return stack;
     }
 
@@ -322,11 +340,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         {
         0, 1, 2
         };
-    }
-
-    public void setDyeing()
-    {
-        shouldMix = true;
     }
 
     @Override
@@ -389,11 +402,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     {
         return this.mixTime;
     }
-
-    public boolean getShouldMix()
-    {
-        return this.shouldMix;
-    }
+    
     public float getRedComponentAmt()
     {
         return redComponentAmt;
@@ -432,11 +441,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public void setMixTime(int mixTime)
     {
         this.mixTime = mixTime;
-    }
-
-    public void setShouldMix(boolean shouldDye)
-    {
-        this.shouldMix = shouldDye;
     }
 
     public void setCustomName(String customName)

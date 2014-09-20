@@ -9,6 +9,6 @@ public class BCItems
     
     public static void initialize()
     {
-        alloy = new ItemAlloy().setTextureName("iron_ingot").setCreativeTab(CreativeTabs.tabMaterials);
+        alloy = new ItemAlloy().setCreativeTab(CreativeTabs.tabMaterials);
     }
 }

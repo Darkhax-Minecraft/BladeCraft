@@ -2,6 +2,8 @@ package net.epoxide.bladecraft.tileentity;
 
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.network.message.MessageTileEntityForge;
+import net.epoxide.bladecraft.util.Reference;
+import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemDye;
@@ -18,39 +20,91 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     
     private int forgingTime;
     private String customName = "";
-    private ItemStack[] dyerStacks = new ItemStack[5];
+    private ItemStack[] forgeStacks = new ItemStack[5];
+    private int selectedLayer = 0;
     
+    public void updateEntity()
+    {
+        if(forgeStacks[0] != null && forgeStacks[1] != null)
+        {
+            forgingTime++;
+        }
+        else
+        {
+            forgingTime = 0;
+        }
+        
+        if(!worldObj.isRemote)
+        {
+            boolean requiresUpdate = false;
+            
+            if(forgingTime >= this.FORGE_TIME)
+            {
+                ItemStack stack = forgeStacks[0];
+                applySwordColoration(stack);
+                requiresUpdate = true;
+            }
+            
+            if(requiresUpdate)
+            {
+                NetworkManager.sendMessage(new MessageTileEntityForge(this));
+                this.markDirty();
+            }
+        }
+    }
+
+    private void applySwordColoration(ItemStack stack)
+    {
+        Utilities.prepareStack(stack);
+        ItemStack alloyStack = this.forgeStacks[1];
+        switch(this.selectedLayer)
+        {
+            case 0: 
+                stack.stackTagCompound.setString(Reference.BLADE_HEX_NBT_KEY, alloyStack.stackTagCompound.getString(Reference.ALLOY_COLOR_TAG));
+                break;
+            case 1: 
+                stack.stackTagCompound.setString(Reference.HILT_HEX_NBT_KEY, alloyStack.stackTagCompound.getString(Reference.ALLOY_COLOR_TAG));
+                break;
+            case 2: 
+                stack.stackTagCompound.setString(Reference.INSET_HEX_NBT_KEY, alloyStack.stackTagCompound.getString(Reference.ALLOY_COLOR_TAG));
+                break;
+        }
+        this.forgeStacks[1] = null;
+        this.forgeStacks[2] = stack;
+        this.forgeStacks[0] = null;
+    }
+
     @Override
     public int getSizeInventory()
     {
-        return dyerStacks.length;
+        return forgeStacks.length;
     }
 
     @Override
     public ItemStack getStackInSlot(int slotInd)
     {
-        return dyerStacks[slotInd];
+        return forgeStacks[slotInd];
     }
 
     @Override
     public ItemStack decrStackSize(int slotInd, int amtRemoved)
     {
-        if(dyerStacks[slotInd] != null)
+        if(forgeStacks[slotInd] != null)
         {
             ItemStack stack;
-            if(dyerStacks[slotInd].stackSize < amtRemoved)
+            if(forgeStacks[slotInd].stackSize < amtRemoved)
             {
-                stack = dyerStacks[slotInd];
-                dyerStacks[slotInd] = null;
+                stack = forgeStacks[slotInd];
+                forgeStacks[slotInd] = null;
                 return stack;
             }
             else
             {
-                stack = dyerStacks[slotInd].splitStack(amtRemoved);
+                stack = forgeStacks[slotInd].splitStack(amtRemoved);
                 
-                if(dyerStacks[slotInd].stackSize == 0)
+                if(forgeStacks[slotInd].stackSize == 0)
                 {
-                    dyerStacks[slotInd] = null;
+                    forgeStacks[slotInd] = null;
                 }
                 
                 return stack;
@@ -62,10 +116,10 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     @Override
     public ItemStack getStackInSlotOnClosing(int slotInd)
     {
-        if(dyerStacks[slotInd] != null)
+        if(forgeStacks[slotInd] != null)
         {
-            ItemStack stack = dyerStacks[slotInd];
-            dyerStacks[slotInd] = null;
+            ItemStack stack = forgeStacks[slotInd];
+            forgeStacks[slotInd] = null;
             return stack;
         }
         return null;
@@ -74,7 +128,7 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     @Override
     public void setInventorySlotContents(int slotInd, ItemStack itemstack)
     {
-        dyerStacks[slotInd] = itemstack;
+        forgeStacks[slotInd] = itemstack;
         
         if(itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
         {
@@ -151,18 +205,20 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
         super.readFromNBT(nbtTagCompound);
         
         NBTTagList itemList = nbtTagCompound.getTagList("Items", 10);
-        dyerStacks = new ItemStack[dyerStacks.length];
+        forgeStacks = new ItemStack[forgeStacks.length];
         
         for(int tag = 0; tag < itemList.tagCount(); tag++)
         {
             NBTTagCompound nbtTag = itemList.getCompoundTagAt(tag);
             byte itemSlot = nbtTag.getByte("Slot");
             
-            if(itemSlot >= 0 && itemSlot < dyerStacks.length)
+            if(itemSlot >= 0 && itemSlot < forgeStacks.length)
             {
-                dyerStacks[itemSlot] = ItemStack.loadItemStackFromNBT(nbtTag);
+                forgeStacks[itemSlot] = ItemStack.loadItemStackFromNBT(nbtTag);
             }
         }
+        
+        this.selectedLayer = nbtTagCompound.getInteger("SelectedLayer");
         
         if(nbtTagCompound.hasKey("CustomName", 8))
         {
@@ -177,18 +233,19 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
         
         nbtTagCompound.setShort("DyeTime", (short)forgingTime);
         NBTTagList itemList = new NBTTagList();
-        for(int stackSlot = 0; stackSlot < dyerStacks.length; stackSlot++)
+        for(int stackSlot = 0; stackSlot < forgeStacks.length; stackSlot++)
         {
-            if(dyerStacks[stackSlot] != null)
+            if(forgeStacks[stackSlot] != null)
             {
                 NBTTagCompound nbtTag = new NBTTagCompound();
                 nbtTag.setByte("Slot", (byte)stackSlot);
-                dyerStacks[stackSlot].writeToNBT(nbtTag);
+                forgeStacks[stackSlot].writeToNBT(nbtTag);
                 itemList.appendTag(nbtTag);
             }
         }
         
         nbtTagCompound.setTag("Items", itemList);
+        nbtTagCompound.setInteger("SelectedLayer", this.selectedLayer);
         
         if(this.hasCustomInventoryName())
         {
@@ -223,13 +280,11 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
 
     public int getForgeProgressScaled(int i)
     {
-        // TODO Actually write the dyeProgress code
-        return 0;
+        return (this.forgingTime * i / this.FORGE_TIME);
     }
 
-    public int getDyeTimeRemainingScaled(int i)
+    public int getForgeTimeRemainingScaled(int i)
     {
-     // TODO Actually write the time remaining code
         return 0;
     }
     
@@ -237,5 +292,15 @@ public class TileEntityForge extends TileEntity implements ISidedInventory
     public Packet getDescriptionPacket()
     {
         return NetworkManager.getPacket(new MessageTileEntityForge(this));
+    }
+
+    public int getSelectedLayer()
+    {
+        return this.selectedLayer;
+    }
+    
+    public void setSelectedLayer(int selectedLayer)
+    {
+        this.selectedLayer = selectedLayer;
     }
 }

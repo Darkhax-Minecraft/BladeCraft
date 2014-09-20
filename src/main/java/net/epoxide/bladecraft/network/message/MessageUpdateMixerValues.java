@@ -53,13 +53,12 @@ public class MessageUpdateMixerValues implements IMessage, IMessageHandler<Messa
     @Override
     public IMessage onMessage(MessageUpdateMixerValues message, MessageContext ctx)
     {
-        FMLLog.severe("Is sending data!");
         TileEntity te = ctx.getServerHandler().playerEntity.getServerForPlayer().getTileEntity(message.x, message.y, message.z);
-        System.err.println("Is reaching! TE: " + te);
         if(te instanceof TileEntityMixer)
         {
             System.err.println(String.format("Notifying server of String changes! String Hex: %s", message.string));
             ((TileEntityMixer) te).setHexStr(message.string);
+            ((TileEntityMixer) te).setMixTime(0);
         }
         return null;
     }
