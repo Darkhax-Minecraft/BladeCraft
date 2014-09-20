@@ -17,6 +17,7 @@ public class ItemAlloy extends Item
     public ItemAlloy()
     {
         super();
+        this.setUnlocalizedName("alloy");
         GameRegistry.registerItem(this, "alloyItem");
     }
     

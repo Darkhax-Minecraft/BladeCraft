@@ -1,13 +1,15 @@
 package net.epoxide.bladecraft.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.epoxide.bladecraft.util.Reference;
 import net.epoxide.bladecraft.util.Utilities;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
 
 public class RenderItemAlloy implements IItemRenderer
 {
@@ -35,7 +37,6 @@ public class RenderItemAlloy implements IItemRenderer
         }
         
         IIcon icon = item.getItem().getIcon(item, 0);
-        RenderItemHelper.drawIconIn3D(item, icon);
         
         String hexStr = item.stackTagCompound.getString(Reference.ALLOY_COLOR_TAG);
         float[] alloyColor = null;
@@ -45,24 +46,24 @@ public class RenderItemAlloy implements IItemRenderer
         {
             case EQUIPPED: 
             {    
-                renderItem(item, icon, alloyColor, false, true);
+                renderItem(type, item, icon, alloyColor, false, true);
                 break;
             }
             case EQUIPPED_FIRST_PERSON: 
             {
-                renderItem(item, icon, alloyColor, false, true);
+                renderItem(type, item, icon, alloyColor, false, true);
                 break;
             }
             case INVENTORY: 
             {
-                renderItem(item, icon, alloyColor, false, false);
+                renderItem(type, item, icon, alloyColor, false, false);
                 break;
             }
             case ENTITY: 
             {
                 GL11.glPushMatrix();
                 GL11.glTranslatef(-0.56F, -0.3F, 0);
-                renderItem(item, icon, alloyColor, true, true);
+                renderItem(type, item, icon, alloyColor, true, true);
                 GL11.glPopMatrix();
                 break;
             }
@@ -71,21 +72,28 @@ public class RenderItemAlloy implements IItemRenderer
             }
     }
     
-    private void renderItem(ItemStack item, IIcon itemIcon, float[] color, boolean isEntity, boolean is3d) 
+    private void renderItem(ItemRenderType type, ItemStack item, IIcon itemIcon, float[] color, boolean isEntity, boolean is3d) 
     {
+        RenderItem render = new RenderItem();
         if (is3d) 
         {
-            RenderItemHelper.drawIconIn3D(item, itemIcon, isEntity, -1f, -1f, -1f);
-    
             if (color != null)
                 RenderItemHelper.drawIconIn3D(item, itemIcon, isEntity, color[0], color[1], color[2]);
+            else
+                RenderItemHelper.drawIconIn3D(item, itemIcon, isEntity, -1f, -1f, -1f);
         }
         else 
         {   
-            RenderItemHelper.renderIconInInventory(itemIcon, -1f, -1f, -1f);
-            
+            Minecraft mc = Minecraft.getMinecraft();
+
             if (color != null)
+            {
                 RenderItemHelper.renderIconInInventory(itemIcon, color[0], color[1], color[2]);
+            }
+            else
+            {
+                render.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, item, 0, 0);
+            }
         }
     }
 }
