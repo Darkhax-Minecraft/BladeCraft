@@ -22,11 +22,12 @@ import net.minecraft.util.ChatComponentText;
 public class TileEntityMixer extends TileEntity implements ISidedInventory
 {
     private static float maxComponentAmt = 250.0F;
-
+    public static final int DYE_INPUT = 0, ALLOY_INPUT = 1, ALLOY_OUTPUT = 2;
+    
     // 5 second split time by default. Considering customizability via
     // Configuration file
-    public static final int timeToSplit = 1;
-    public static final int timeToDye = 30 * 20;
+    public static final int TIME_TO_SPLIT = 1;
+    public static final int TIME_TO_DYE = 30 * 20;
 
     private int splitTime = 0;
     private int mixTime = 0;
@@ -219,7 +220,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             if (mixerStacks[0] != null && hasSpaceForComponents())
             {
                 ++splitTime;
-                if (splitTime >= timeToSplit)
+                if (splitTime >= TIME_TO_SPLIT)
                 {
                     splitTime = 0;
                     performDyeSplit();
@@ -228,8 +229,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             }
             else
             {
-                if (splitTime != 0)
-                    splitTime = 0;
+                splitTime = 0;
             }
 
             if (mixerStacks[1] != null)
@@ -239,7 +239,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                 {
                     ++mixTime;
                     System.err.println(mixTime);
-                    if (mixTime == timeToDye)
+                    if (mixTime == TIME_TO_DYE)
                     {
                         mixTime = 0;
                         performItemDyeing();
@@ -247,6 +247,10 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                         requiresUpdate = true;
                     }
                 }
+            }
+            else
+            {
+                this.mixTime = 0;
             }
         }
 
@@ -359,10 +363,9 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     }
 
 
-    public int getSplitProgressScaled(int i)
+    public int getDyeProgressScaled(int i)
     {
-        // TODO Actually write splitting progress code
-        return 0;
+        return (this.mixTime * i) / this.TIME_TO_DYE;
     }
 
     public boolean isSplitting()
@@ -373,12 +376,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public int getSplitTimeRemainingScaled(int i)
     {
         // TODO Actually write split time remaining code
-        return 0;
-    }
-
-    public int getDyeProgressScaled(int i)
-    {
-        // TODO Actually write dye progress code
         return 0;
     }
 
@@ -487,5 +484,10 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public String getHexStr()
     {
         return this.hexStr;
+    }
+
+    public boolean isDyeing()
+    {
+        return this.mixTime > 0;
     }
 }

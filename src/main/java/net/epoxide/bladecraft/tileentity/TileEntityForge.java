@@ -17,10 +17,11 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityForge extends TileEntity implements ISidedInventory
 {
     public static final int FORGE_TIME = 20 * 20;
+    public static final int SWORD_INPUT = 0, ALLOY_INPUT = 1, SWORD_OUTPUT = 2;
     
     private int forgingTime;
     private String customName = "";
-    private ItemStack[] forgeStacks = new ItemStack[5];
+    private ItemStack[] forgeStacks = new ItemStack[3];
     private int selectedLayer = 0;
     
     public void updateEntity()

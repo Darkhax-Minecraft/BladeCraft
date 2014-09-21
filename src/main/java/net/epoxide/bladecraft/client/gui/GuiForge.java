@@ -28,9 +28,8 @@ public class GuiForge extends GuiContainer
     public GuiForge(InventoryPlayer inventory, TileEntityForge te)
     {
         super(new ContainerForge(inventory, te));
-        FMLLog.severe("Constructing GUI for Forge");
         forge = te;
-        button = new GuiButton(0, 175, 85, 80, 20, "Layer: " + getNameStrForLayer(te.getSelectedLayer()));
+        button = new GuiButton(0, this.width + this.xSize, 85, 80, 20, "Gild " + getNameStrForLayer(te.getSelectedLayer()));
         this.layer = forge.getSelectedLayer();
     }
     
@@ -103,21 +102,26 @@ public class GuiForge extends GuiContainer
             switch(layer)
             {
                 case 0: 
-                    button.displayString = "Layer: Blade";
+                    button.displayString = "Gild Blade";
                     break;
                 case 1:
-                    button.displayString = "Layer: Hilt";
+                    button.displayString = "Gild Hilt";
                     break;
                 case 2:
-                    button.displayString = "Layer: Inset";
+                    button.displayString = "Gild Handle";
                     break;
             }
         }
         
         int xStart = (this.width - this.xSize) / 2;
         int yStart = (this.height - this.ySize) / 2;
-        button.xPosition = xStart + 48;
-        button.yPosition = yStart + 45;
+        button.xPosition = xStart + 100;
+        button.yPosition = yStart + 100;
+        
+        if(this.forge.isForging())
+        {
+            this.mc.theWorld.playSound(this.forge.xCoord, p_72980_3_, p_72980_5_, p_72980_7_, p_72980_8_, p_72980_9_, p_72980_10_);
+        }
     }
     
     public void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
@@ -137,9 +141,8 @@ public class GuiForge extends GuiContainer
 
         if (this.forge.isForging())
         {
-            int percentRemaining = this.forge.getForgeProgressScaled(13);
-            System.err.println(percentRemaining);
-            this.drawTexturedModalRect(xStart + 106, yStart + 29, 176, 0, 1 + percentRemaining, 16);
+            int progress = this.forge.getForgeProgressScaled(10);
+            this.drawTexturedModalRect(xStart + 106, yStart + 29, 176, 0, 1 + progress, 16);
         }
     }
 }

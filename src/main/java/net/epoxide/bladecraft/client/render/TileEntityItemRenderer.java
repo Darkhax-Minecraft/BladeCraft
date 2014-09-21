@@ -14,7 +14,8 @@ public class TileEntityItemRenderer implements IItemRenderer
 {
     private ModelBase model;
     private ResourceLocation texture;
-
+    private float rot = 0.0f;
+    
     public TileEntityItemRenderer(ModelBase model, ResourceLocation texture)
     {
         this.model = model;
@@ -73,6 +74,7 @@ public class TileEntityItemRenderer implements IItemRenderer
             GL11.glPushMatrix();
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(rot--, 0, 1, 0);
             model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, 0.0625F);
             GL11.glPopMatrix();
             GL11.glPopMatrix();

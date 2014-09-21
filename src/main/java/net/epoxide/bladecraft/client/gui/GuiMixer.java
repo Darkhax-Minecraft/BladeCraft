@@ -7,9 +7,11 @@ import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.network.message.MessageUpdateMixerValues;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
+import net.epoxide.bladecraft.util.Utilities;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -46,22 +48,24 @@ public class GuiMixer extends GuiContainer
         // Red
         int redDeltaHeight = (int)(18 * (1f - mixer.getRedComponentPercentage()));
         redDeltaHeight = (redDeltaHeight <= 0 ? 1 : redDeltaHeight);
-        this.drawTexturedModalRect(k + 16, l + 42 + redDeltaHeight, 176, 0, 6, 18 - redDeltaHeight);
+        this.drawTexturedModalRect(k + 21, l + 44 + redDeltaHeight, 176, 0, 6, 18 - redDeltaHeight);
         // Green
         int greenDeltaHeight = (int)(18 * (1f - mixer.getGreenComponentPercentage()));
         greenDeltaHeight = (greenDeltaHeight <= 0 ? 1 : greenDeltaHeight);
-        this.drawTexturedModalRect(k + 26, l + 42 + greenDeltaHeight, 182, 0, 6, 18 - greenDeltaHeight);
+        this.drawTexturedModalRect(k + 31, l + 44 + greenDeltaHeight, 182, 0, 6, 18 - greenDeltaHeight);
         // Blue
         int blueDeltaHeight = (int)(18 * (1f - mixer.getBlueComponentPercentage()));
         blueDeltaHeight = (blueDeltaHeight <= 0 ? 1 : blueDeltaHeight);
-        this.drawTexturedModalRect(k + 36, l + 42 + blueDeltaHeight, 188, 0, 6, 18 - blueDeltaHeight);
+        this.drawTexturedModalRect(k + 41, l + 44 + blueDeltaHeight, 188, 0, 6, 18 - blueDeltaHeight);
         
-        if (this.mixer.isSplitting())
+        this.drawTexturedModalRect(k + 113, l + 48, 194, 0, 16, 16);
+        
+        if (this.mixer.isDyeing())
         {
-            int i1 = this.mixer.getSplitTimeRemainingScaled(13);
-            this.drawTexturedModalRect(k + 56, l + 36 + 12 - i1, 176, 12 - i1, 14, i1 + 1);
-            i1 = this.mixer.getSplitProgressScaled(24);
-            this.drawTexturedModalRect(k + 79, l + 34, 176, 14, i1 + 1, 16);
+            int progress = this.mixer.getDyeProgressScaled(10);
+            float[] colorValues = Utilities.getRGBFromHex(this.mixer.getHexStr());
+            Tessellator.instance.setColorRGBA_F(colorValues[0], colorValues[1], colorValues[2], 1);
+            this.drawTexturedModalRect(k + 113, l + 60, 194, 0, 16, 16);
         }
         
         // TODO Apply rendering for dye progress in the mixer

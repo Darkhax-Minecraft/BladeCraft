@@ -1,10 +1,13 @@
 package net.epoxide.bladecraft.inventory;
 
+import net.epoxide.bladecraft.item.ItemAlloy;
+import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 
 public class ContainerMixer extends Container
@@ -17,9 +20,9 @@ public class ContainerMixer extends Container
         playerInv = inv;
         mixer = te;
         
-        this.addSlotToContainer(new SlotDye(te, 0, 21, 18));
-        this.addSlotToContainer(new SlotAlloy(playerInv.player, te, 1, 83, 45));
-        this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 134, 45));
+        this.addSlotToContainer(new SlotDye(te, 0, 26, 20));
+        this.addSlotToContainer(new SlotAlloy(playerInv.player, te, 1, 88, 47));
+        this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 139, 47));
         
         int i;
 
@@ -27,13 +30,13 @@ public class ContainerMixer extends Container
         {
             for (int j = 0; j < 9; ++j)
             {
-                this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 4 + j * 19, 79 + i * 19));
+                this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 80 + i * 18));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            this.addSlotToContainer(new Slot(playerInv, i, 4 + i * 19, 140));
+            this.addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 138));
         }
     }
 
@@ -43,11 +46,76 @@ public class ContainerMixer extends Container
         return mixer.isUseableByPlayer(player);
     }
     
-    public ItemStack slotClick(int slotIndex, int p_75144_2_, int type, EntityPlayer player)
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotInd)
     {
-        //if(type != 1)
-            return super.slotClick(slotIndex, p_75144_2_, type, player);
-        //ItemStack stack = this.mixer.getStackInSlot(slotIndex);
-        //return stack;
+        ItemStack stack = null;
+        Slot slot = (Slot)this.inventorySlots.get(slotInd);
+        if(slot != null && slot.getHasStack())
+        {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
+            
+            if(slotInd == TileEntityMixer.ALLOY_OUTPUT || slotInd == TileEntityMixer.DYE_INPUT || slotInd == TileEntityMixer.ALLOY_INPUT)
+            {
+                if(!this.mergeItemStack(stack1, 3, 39, true))
+                {
+                    return null;
+                }
+                slot.onSlotChange(stack1, stack);
+            }
+            else
+            if(slotInd != TileEntityMixer.ALLOY_INPUT && slotInd != TileEntityMixer.DYE_INPUT && slotInd != TileEntityMixer.ALLOY_OUTPUT)
+            {
+                if(stack1.getItem() instanceof ItemDye)
+                {
+                    if(!this.mergeItemStack(stack1, TileEntityMixer.DYE_INPUT, TileEntityMixer.DYE_INPUT + 1, false))
+                    {
+                        return null;
+                    }
+                }
+                else
+                if(stack1.getItem() instanceof ItemAlloy)
+                {
+                    if(!this.mergeItemStack(stack1, TileEntityMixer.ALLOY_INPUT, TileEntityMixer.ALLOY_INPUT + 1, false))
+                    {
+                        return null;
+                    }
+                }
+                else
+                if(slotInd >= TileEntityMixer.ALLOY_OUTPUT && slotInd < TileEntityMixer.ALLOY_OUTPUT + 28)
+                {
+                    if(!this.mergeItemStack(stack1, TileEntityMixer.ALLOY_OUTPUT + 28, TileEntityMixer.ALLOY_OUTPUT + 37, false))
+                    {
+                        return null;
+                    }
+                }
+                else
+                if(slotInd >= TileEntityMixer.ALLOY_OUTPUT + 28 && slotInd < TileEntityMixer.ALLOY_OUTPUT + 37 && !this.mergeItemStack(stack1, TileEntityForge.SWORD_OUTPUT + 1, TileEntityForge.SWORD_OUTPUT + 28, false))
+                {
+                    return null;
+                }
+                else
+                if(!this.mergeItemStack(stack1, TileEntityMixer.ALLOY_OUTPUT + 1, TileEntityMixer.ALLOY_OUTPUT + 37, false))
+                {
+                    return null;
+                }
+            }   
+            
+            if(stack1.stackSize == 0)
+            {
+                slot.putStack((ItemStack)null);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+            
+            if(stack1.stackSize == stack.stackSize)
+            {
+                return null;
+            }
+            slot.onPickupFromSlot(player, stack1);
+        }        
+        return stack;
     }
 }
