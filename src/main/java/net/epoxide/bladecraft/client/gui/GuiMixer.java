@@ -90,6 +90,6 @@ public class GuiMixer extends GuiContainer
     public void applyChanges(String hexStr)
     {
         this.mixer.setHexStr(hexStr);
-        this.mc.thePlayer.sendQueue.addToSendQueue(NetworkManager.getPacket(new MessageUpdateMixerValues(this.mixer)));
+        NetworkManager.sendMessage((new MessageUpdateMixerValues(this.mixer)));
     }
 }

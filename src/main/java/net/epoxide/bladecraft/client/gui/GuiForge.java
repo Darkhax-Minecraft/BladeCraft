@@ -72,7 +72,7 @@ public class GuiForge extends GuiContainer
                 }
                 
                 this.forge.setSelectedLayer(this.layer);
-                this.mc.thePlayer.sendQueue.addToSendQueue(NetworkManager.getPacket(new MessageUpdateForgeLayer(this.forge, this.layer)));
+                NetworkManager.sendMessage((new MessageUpdateForgeLayer(this.forge, this.layer)));
             }
             // TODO Implement custom items with this system.
         }
@@ -87,7 +87,7 @@ public class GuiForge extends GuiContainer
             button.displayString = "";
             this.button.enabled = false;
             this.layer = 0;
-            this.mc.thePlayer.sendQueue.addToSendQueue(NetworkManager.getPacket(new MessageUpdateForgeLayer(this.forge, this.layer)));
+            NetworkManager.sendMessage((new MessageUpdateForgeLayer(this.forge, this.layer)));
         }
         else if(this.forge.getStackInSlot(0) != null && !button.enabled)
         {
@@ -120,7 +120,7 @@ public class GuiForge extends GuiContainer
         
         if(this.forge.isForging())
         {
-            this.mc.theWorld.playSound(this.forge.xCoord, p_72980_3_, p_72980_5_, p_72980_7_, p_72980_8_, p_72980_9_, p_72980_10_);
+            
         }
     }
     
