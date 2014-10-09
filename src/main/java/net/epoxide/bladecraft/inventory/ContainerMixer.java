@@ -1,10 +1,10 @@
 package net.epoxide.bladecraft.inventory;
 
-import net.epoxide.bladecraft.item.ItemAlloy;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemDye;
@@ -21,8 +21,8 @@ public class ContainerMixer extends Container
         mixer = te;
         
         this.addSlotToContainer(new SlotDye(te, 0, 26, 20));
-        this.addSlotToContainer(new SlotAlloy(playerInv.player, te, 1, 88, 47));
-        this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 139, 47));
+        this.addSlotToContainer(new SlotIronIngot(playerInv.player, te, 1, 87, 30));
+        this.addSlotToContainer(new SlotMixer(playerInv.player, te, 2, 139, 30));
         
         int i;
 
@@ -74,7 +74,7 @@ public class ContainerMixer extends Container
                     }
                 }
                 else
-                if(stack1.getItem() instanceof ItemAlloy)
+                if(stack1.getItem() == Items.iron_ingot)
                 {
                     if(!this.mergeItemStack(stack1, TileEntityMixer.ALLOY_INPUT, TileEntityMixer.ALLOY_INPUT + 1, false))
                     {
@@ -91,11 +91,6 @@ public class ContainerMixer extends Container
                 }
                 else
                 if(slotInd >= TileEntityMixer.ALLOY_OUTPUT + 28 && slotInd < TileEntityMixer.ALLOY_OUTPUT + 37 && !this.mergeItemStack(stack1, TileEntityForge.SWORD_OUTPUT + 1, TileEntityForge.SWORD_OUTPUT + 28, false))
-                {
-                    return null;
-                }
-                else
-                if(!this.mergeItemStack(stack1, TileEntityMixer.ALLOY_OUTPUT + 1, TileEntityMixer.ALLOY_OUTPUT + 37, false))
                 {
                     return null;
                 }

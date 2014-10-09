@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityForgeRenderer extends TileEntitySpecialRenderer
 {
+    private static final ResourceLocation FORGE_MODEL_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/forge.png");
     private ModelForge model = new ModelForge();
     
     @Override
@@ -24,7 +25,7 @@ public class TileEntityForgeRenderer extends TileEntitySpecialRenderer
             
             GL11.glPushMatrix();
             GL11.glTranslatef((float)f + 0.5F, (float)f1 + 1.5F, (float)f2 + 0.5F);
-            Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/blocks/forge.png"));
+            Minecraft.getMinecraft().renderEngine.bindTexture(FORGE_MODEL_TEXTURE);
             GL11.glPushMatrix();
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             model.render((Entity)null, (float)f, (float)f1, (float)f2, (float)f3, 0.0625F, 0.0625F);

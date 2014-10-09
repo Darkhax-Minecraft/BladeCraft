@@ -2,6 +2,7 @@ package net.epoxide.bladecraft.tileentity;
 
 import java.util.Map;
 
+import net.epoxide.bladecraft.item.BCItems;
 import net.epoxide.bladecraft.item.crafting.DyeableItems;
 import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.epoxide.bladecraft.network.NetworkManager;
@@ -21,7 +22,7 @@ import net.minecraft.util.ChatComponentText;
 
 public class TileEntityMixer extends TileEntity implements ISidedInventory
 {
-    private static float maxComponentAmt = 250.0F;
+    private static final float MAX_COMPONENT_AMOUNT = 250.0F;
     public static final int DYE_INPUT = 0, ALLOY_INPUT = 1, ALLOY_OUTPUT = 2;
     
     // 5 second split time by default. Considering customizability via
@@ -151,12 +152,13 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             }
         }
 
+        this.splitTime = nbtTagCompound.getShort("SplitTime");
+        this.mixTime = nbtTagCompound.getShort("MixTime");
+
         this.redComponentAmt = nbtTagCompound.getFloat("RedComponentAmount");
         this.greenComponentAmt = nbtTagCompound.getFloat("GreenComponentAmount");
         this.blueComponentAmt = nbtTagCompound.getFloat("BlueComponentAmount");
-
-        this.splitTime = nbtTagCompound.getShort("SplitTime");
-
+        
         if(nbtTagCompound.hasKey("ColorString"))
         {
             this.hexStr = nbtTagCompound.getString("ColorString");
@@ -177,7 +179,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     {
         super.writeToNBT(nbtTagCompound);
 
-        nbtTagCompound.setShort("SplitTime", (short) splitTime);
+       
         NBTTagList itemList = new NBTTagList();
         for (int stackSlot = 0; stackSlot < mixerStacks.length; stackSlot++)
         {
@@ -189,6 +191,9 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
                 itemList.appendTag(nbtTag);
             }
         }
+        
+        nbtTagCompound.setShort("SplitTime", (short) splitTime);
+        nbtTagCompound.setShort("MixTime", (short)this.mixTime);
         
         nbtTagCompound.setFloat("RedComponentAmount", this.redComponentAmt);
         nbtTagCompound.setFloat("GreenComponentAmount", this.greenComponentAmt);
@@ -212,39 +217,46 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     }
 
     public void updateEntity()
-    {
-        boolean requiresUpdate = false;
-
+    {   
         if (!worldObj.isRemote)
         {
+            boolean requiresUpdate = false;
+            
             if (mixerStacks[0] != null && hasSpaceForComponents())
             {
                 ++splitTime;
-                if (splitTime >= TIME_TO_SPLIT)
-                {
-                    splitTime = 0;
-                    performDyeSplit();
-                    requiresUpdate = true;
-                }
             }
             else
             {
                 splitTime = 0;
             }
-
+            
+            if (splitTime >= TIME_TO_SPLIT)
+            {
+                splitTime = 0;
+                performDyeSplit();
+                requiresUpdate = true;
+            }
+            requiresUpdate = true;
             if (mixerStacks[1] != null)
             {
                 float[] colorValues = Utilities.getRGBFromHex(this.hexStr);
                 if(hasEnoughPigment(colorValues))
                 {
-                    ++mixTime;
-                    System.err.println(mixTime);
-                    if (mixTime == TIME_TO_DYE)
+                    boolean mix = false;
+                    if(mixerStacks[2] == null || mixerStacks[2].stackTagCompound.getString(Reference.ALLOY_COLOR_TAG).equalsIgnoreCase(this.hexStr))
                     {
-                        mixTime = 0;
-                        performItemDyeing();
-                        updateComponentAmounts();
-                        requiresUpdate = true;
+                        mix = true;
+                    }
+                    if(mix)
+                    {
+                        ++mixTime;
+                        if (mixTime == TIME_TO_DYE)
+                        {
+                            mixTime = 0;
+                            performItemDyeing();
+                            updateComponentAmounts();
+                        }
                     }
                 }
             }
@@ -252,12 +264,14 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
             {
                 this.mixTime = 0;
             }
-        }
-
-        if (requiresUpdate)
-        {
-            NetworkManager.sendMessage(new MessageTileEntityMixer(this));
-            markDirty();
+            
+            if (requiresUpdate)
+            {
+                NetworkManager.CHANNELS.sendToAll(new MessageTileEntityMixer(this));
+                //Delegation system not working properly. Will fix later.
+//                NetworkManager.sendMessage(new MessageTileEntityMixer(this));
+                markDirty();
+            }
         }
     }
     
@@ -276,9 +290,16 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     private void performItemDyeing()
     {
-        ItemStack stack = applyDye(mixerStacks[1]);
-        mixerStacks[2] = stack;
-        mixerStacks[1] = null;
+        if(mixerStacks[2] == null)
+        {
+            ItemStack stack = applyDye(new ItemStack(BCItems.alloy, 1));
+            mixerStacks[2] = stack;
+            mixerStacks[1] = null;
+        }
+        else
+        {
+            mixerStacks[2].stackSize++;
+        }
     }
 
     private ItemStack applyDye(ItemStack itemStack)
@@ -302,7 +323,7 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         float tempGreen = greenComponentAmt + entry.getGreen();
         float tempBlue = blueComponentAmt + entry.getBlue();
 
-        if (tempRed < maxComponentAmt && tempGreen < maxComponentAmt && tempBlue < maxComponentAmt)
+        if (tempRed < MAX_COMPONENT_AMOUNT && tempGreen < MAX_COMPONENT_AMOUNT && tempBlue < MAX_COMPONENT_AMOUNT)
             return true;
         return false;
     }
@@ -310,7 +331,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     private void performDyeSplit()
     {
         RGBEntry entry = DyeableItems.getDyeComponentValue(mixerStacks[0]);
-        System.err.println(String.format("Red: %f, Green: %f, Blue: %f", entry.getRed(), entry.getGreen(), entry.getBlue()));
         redComponentAmt += entry.getRed() * 3;
         greenComponentAmt += entry.getGreen() * 3;
         blueComponentAmt += entry.getBlue() * 3;
@@ -371,18 +391,6 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
     public boolean isSplitting()
     {
         return splitTime > 0;
-    }
-
-    public int getSplitTimeRemainingScaled(int i)
-    {
-        // TODO Actually write split time remaining code
-        return 0;
-    }
-
-    public int getDyeTimeRemainingScaled(int i)
-    {
-        // TODO Actually write dye time remaining code.
-        return 0;
     }
 
     public String getCustomName()
@@ -458,17 +466,17 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
 
     public float getRedComponentPercentage()
     {
-        return (this.redComponentAmt / this.maxComponentAmt);
+        return (this.redComponentAmt / this.MAX_COMPONENT_AMOUNT);
     }
 
     public float getGreenComponentPercentage()
     {
-        return (this.greenComponentAmt / this.maxComponentAmt);
+        return (this.greenComponentAmt / this.MAX_COMPONENT_AMOUNT);
     }
     
     public float getBlueComponentPercentage()
     {
-        return (this.blueComponentAmt / this.maxComponentAmt);
+        return (this.blueComponentAmt / this.MAX_COMPONENT_AMOUNT);
     }
 
     private String[] buildArrayFromMap(Map<Integer, String> layerIDHexMap)

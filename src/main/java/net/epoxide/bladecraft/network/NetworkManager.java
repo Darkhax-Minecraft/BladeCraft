@@ -15,9 +15,12 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 
+/**
+ * 
+ **/
 public class NetworkManager
 {
-    private static final SimpleNetworkWrapper CHANNELS = NetworkRegistry.INSTANCE.newSimpleChannel("BC|Network_Channel");
+    public static final SimpleNetworkWrapper CHANNELS = NetworkRegistry.INSTANCE.newSimpleChannel("BC|Network_Channel");
     private static ISidedNetworkDelegate sidedDelegate;
     private static int nextDiscriminator = 0;
     

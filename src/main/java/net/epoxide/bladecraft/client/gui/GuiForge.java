@@ -22,6 +22,7 @@ public class GuiForge extends GuiContainer
 {
     private static final ResourceLocation FORGE_GUI_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/container/forge_gui.png");
     private TileEntityForge forge;
+    private int x, y;
     private int layer;
     private GuiButton button; 
     
@@ -29,7 +30,9 @@ public class GuiForge extends GuiContainer
     {
         super(new ContainerForge(inventory, te));
         forge = te;
-        button = new GuiButton(0, this.width + this.xSize, 85, 80, 20, "Gild " + getNameStrForLayer(te.getSelectedLayer()));
+        this.x = (this.width - this.xSize) / 2;
+        this.y = (this.height - this.ySize) / 2;
+        button = new GuiButton(0, x + 48, y + 45, 80, 20, "Gild " + getNameStrForLayer(te.getSelectedLayer()));      
         this.layer = forge.getSelectedLayer();
     }
     
@@ -94,6 +97,11 @@ public class GuiForge extends GuiContainer
             this.button.enabled = true;
         }
         
+        this.x = (this.width - this.xSize) / 2;
+        this.y = (this.height - this.ySize) / 2;
+        button.xPosition = x + 48;
+        button.yPosition = y + 45;
+        
         ItemStack stack = this.forge.getStackInSlot(0);
         if(stack == null) return;
         
@@ -113,10 +121,7 @@ public class GuiForge extends GuiContainer
             }
         }
         
-        int xStart = (this.width - this.xSize) / 2;
-        int yStart = (this.height - this.ySize) / 2;
-        button.xPosition = xStart + 100;
-        button.yPosition = yStart + 100;
+        
         
         if(this.forge.isForging())
         {
@@ -141,8 +146,8 @@ public class GuiForge extends GuiContainer
 
         if (this.forge.isForging())
         {
-            int progress = this.forge.getForgeProgressScaled(10);
-            this.drawTexturedModalRect(xStart + 106, yStart + 29, 176, 0, 1 + progress, 16);
+            int progress = this.forge.getForgeProgressScaled(12);
+            this.drawTexturedModalRect(xStart + 106, yStart + 29, 176, 0, 1 + progress, 15);
         }
     }
 }

@@ -41,9 +41,10 @@ public class TileEntityItemRenderer implements IItemRenderer
         {
         case EQUIPPED:
             GL11.glPushMatrix();
-            GL11.glTranslatef(0.25F, 1.5F, -0.25F);
+            GL11.glTranslatef(0.25F, 1.0F, -0.25F);
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             GL11.glPushMatrix();
+            GL11.glScalef(0.8F, 0.8F, 0.8F);
             GL11.glRotatef(200F, 0.0F, 0.0F, 1.0F);
             model.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, 0.0625F);
             GL11.glPopMatrix();
@@ -59,12 +60,11 @@ public class TileEntityItemRenderer implements IItemRenderer
             break;
         case INVENTORY:
             GL11.glPushMatrix();
-            GL11.glTranslatef(8.0F, -7.0F, 0.0F);
-            GL11.glScalef(15, 15, 15);
+            GL11.glTranslatef(8.0F, -3.0F, 0.0F);
+            GL11.glScalef(12, 12, 12);
             GL11.glPushMatrix();
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-            GL11.glRotatef(0.0F, 0.0F, 0.0F, 1.0F);
-            model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, 0.0625F);
+            model.render(null, 0.0F, 0.0F, 0F, 0.0F, 0.0F, 0.0625F);
             GL11.glPopMatrix();
             GL11.glPopMatrix();
             break;

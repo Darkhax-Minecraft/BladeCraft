@@ -21,9 +21,8 @@ public class ContainerForge extends Container
         playerInv = inventory;
         tileEntity = te;
         this.addSlotToContainer(new SlotSword(playerInv.player, te, 0, 32, 27, false));
-        this.addSlotToContainer(new SlotAlloy(playerInv.player, te, 1, 80, 27));
+        this.addSlotToContainer(new SlotAlloy(te, 1, 80, 27));
         this.addSlotToContainer(new SlotSword(playerInv.player, te, 2, 128, 27, true));
-        FMLLog.severe("Constructing Container for Forge");
 
         int i;
 

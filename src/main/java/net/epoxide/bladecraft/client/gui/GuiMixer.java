@@ -22,6 +22,9 @@ public class GuiMixer extends GuiContainer
 {
     private static final ResourceLocation MIXER_GUI_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/container/mixer_gui.png");
     TileEntityMixer mixer;
+    private GuiButton settings = new GuiButton(0, 200, 60, 80, 20, "Settings");
+    private int x;
+    private int y;
     
     public GuiMixer(InventoryPlayer inventory, TileEntityMixer te)
     {
@@ -62,21 +65,20 @@ public class GuiMixer extends GuiContainer
         
         if (this.mixer.isDyeing())
         {
-            int progress = this.mixer.getDyeProgressScaled(10);
-            float[] colorValues = Utilities.getRGBFromHex(this.mixer.getHexStr());
-            Tessellator.instance.setColorRGBA_F(colorValues[0], colorValues[1], colorValues[2], 1);
-            this.drawTexturedModalRect(k + 113, l + 60, 194, 0, 16, 16);
+            int progress = this.mixer.getDyeProgressScaled(24);
+            this.drawTexturedModalRect(k + 109, l + 31, 176, 17, progress, 16);
         }
-        
-        // TODO Apply rendering for dye progress in the mixer
     }
     
     public void initGui()
     {
         super.initGui();
         this.buttonList.clear();
-        
-        this.buttonList.add(new GuiButton(0, 200, 60, 80, 20, "Settings"));
+        this.buttonList.add(settings);
+        this.x = (this.width - this.xSize) / 2;
+        this.y = (this.height - this.ySize) / 2;
+        this.settings.xPosition = this.x + 81;
+        this.settings.yPosition = this.y + 50;
     }
     
     public void actionPerformed(GuiButton button)
@@ -91,5 +93,16 @@ public class GuiMixer extends GuiContainer
     {
         this.mixer.setHexStr(hexStr);
         NetworkManager.sendMessage((new MessageUpdateMixerValues(this.mixer)));
+    }
+    
+    public void updateScreen()
+    {
+        super.updateScreen();
+        
+        this.x = (this.width - this.xSize) / 2;
+        this.y = (this.height - this.ySize) / 2;
+        
+        this.settings.xPosition = this.x + 81;
+        this.settings.yPosition = this.y + 50;
     }
 }

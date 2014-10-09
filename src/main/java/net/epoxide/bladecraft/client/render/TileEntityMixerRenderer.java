@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class TileEntityMixerRenderer extends TileEntitySpecialRenderer
 {
+    private static final ResourceLocation MIXER_MODEL_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer.png");
+    private static final ResourceLocation MIXER_OVERLAY_MODEL_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer_overlay.png");
     private ModelMixer model = new ModelMixer();
     
     @Override
@@ -26,11 +28,11 @@ public class TileEntityMixerRenderer extends TileEntitySpecialRenderer
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glTranslatef((float)f + 0.5F, (float)f1 + 1.5F, (float)f2 + 0.5F);
-            Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer.png"));
+            Minecraft.getMinecraft().renderEngine.bindTexture(MIXER_MODEL_TEXTURE);
             GL11.glPushMatrix();
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             model.render((Entity)null, (float)f, (float)f1, (float)f2, (float)f3, 0.0625F, 0.0625F);
-            Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/blocks/mixer_overlay.png"));
+            Minecraft.getMinecraft().renderEngine.bindTexture(MIXER_OVERLAY_MODEL_TEXTURE);
             String hex = ((TileEntityMixer) te).getHexStr();
             float[] hexValue = Utilities.getRGBFromHex(hex);
             GL11.glColor3f(hexValue[0], hexValue[1], hexValue[2]);
