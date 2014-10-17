@@ -5,7 +5,7 @@ import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.network.message.MessageUpdateForgeLayer;
 import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.util.Reference;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -16,11 +16,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.FMLLog;
-
 public class GuiForge extends GuiContainer
 {
     private static final ResourceLocation FORGE_GUI_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/container/forge_gui.png");
+    private ISound forgeSound;
     private TileEntityForge forge;
     private int x, y;
     private int layer;
@@ -34,6 +33,63 @@ public class GuiForge extends GuiContainer
         this.y = (this.height - this.ySize) / 2;
         button = new GuiButton(0, x + 48, y + 45, 80, 20, "Gild " + getNameStrForLayer(te.getSelectedLayer()));      
         this.layer = forge.getSelectedLayer();
+        
+        forgeSound = new ISound()
+        {
+            @Override
+            public ResourceLocation getPositionedSoundLocation()
+            {
+                return new ResourceLocation("");
+            }
+
+            @Override
+            public boolean canRepeat()
+            {
+                return false;
+            }
+
+            @Override
+            public int getRepeatDelay()
+            {
+                return 40;
+            }
+
+            @Override
+            public float getVolume()
+            {
+                return 2;
+            }
+
+            @Override
+            public float getPitch()
+            {
+                return 2;
+            }
+
+            @Override
+            public float getXPosF()
+            {
+                return forge.xCoord;
+            }
+
+            @Override
+            public float getYPosF()
+            {
+                return forge.yCoord;
+            }
+
+            @Override
+            public float getZPosF()
+            {
+                return forge.zCoord;
+            }
+
+            @Override
+            public AttenuationType getAttenuationType()
+            {
+                return AttenuationType.LINEAR;
+            }
+        };
     }
     
     private String getNameStrForLayer(int selectedLayer)
@@ -125,7 +181,7 @@ public class GuiForge extends GuiContainer
         
         if(this.forge.isForging())
         {
-            
+            this.mc.getSoundHandler().playSound(forgeSound);
         }
     }
     

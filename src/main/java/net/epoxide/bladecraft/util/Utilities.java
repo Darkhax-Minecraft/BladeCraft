@@ -1,13 +1,15 @@
 package net.epoxide.bladecraft.util;
 
-import com.google.common.base.Strings;
-
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.ISound.AttenuationType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+
+import com.google.common.base.Strings;
 
 public class Utilities
-{
-
+{   
     public static float[] getRGBFromHex(String hex)
     {
         float[] rgb = new float[3];
@@ -41,5 +43,130 @@ public class Utilities
             // letting it propagate to the top of the stack. Discard it silently and return false.
         }
         return false;
+    }
+    
+    public static ISound buildSound(ResourceLocation location, float volume, float pitch)
+    {
+    	return new Sound(location, AttenuationType.LINEAR, volume, pitch);
+    }
+    
+    public static class Sound implements ISound
+    {
+        private final ResourceLocation location;
+        private final AttenuationType type;
+        private float volume;
+        private float pitch;
+        private boolean canRepeat;
+        private int repeatDelay;
+        private float x, y, z;
+        
+        public Sound(String location)
+        {
+        	this(location, AttenuationType.LINEAR);
+        }
+        
+        public Sound(ResourceLocation location)
+        {
+        	this(location, AttenuationType.LINEAR);
+        }
+        
+        public Sound(String location, AttenuationType type)
+        {
+        	this(new ResourceLocation(location), type);
+        }
+        
+        public Sound(ResourceLocation location, AttenuationType type)
+        {
+        	this(location, type, 1.0F);
+        }
+        
+        public Sound(ResourceLocation location, AttenuationType type, float volume)
+        {
+        	this(location, type, volume, 1.0F);
+        }
+        
+        public Sound(ResourceLocation location, AttenuationType type, float volume, float pitch)
+        {
+        	this(location, type, volume, pitch, -1);
+        }
+     
+        public Sound(ResourceLocation location, AttenuationType type, float volume, float pitch, int repeatDelay)
+        {
+            this.location = location;
+            this.type = type;
+            this.volume = volume;
+            this.pitch = pitch;
+            if(this.repeatDelay < 0)
+            {
+            	this.canRepeat = false;
+            	this.repeatDelay = 0;
+            }
+            else
+            {
+            	this.canRepeat = true;
+            	this.repeatDelay = repeatDelay;
+            }
+        }
+        
+        public void setLocation(float x, float y, float z)
+        {
+        	this.x = x;
+        	this.y = y; 
+        	this.z = z;
+        }
+        
+        @Override
+        public ResourceLocation getPositionedSoundLocation()
+        {
+            return this.location;
+        }
+
+        @Override
+        public boolean canRepeat()
+        {
+            return this.canRepeat;
+        }
+
+        @Override
+        public int getRepeatDelay()
+        {
+            return this.repeatDelay;
+        }
+
+        @Override
+        public float getVolume()
+        {
+            return this.volume;
+        }
+
+        @Override
+        public float getPitch()
+        {
+            return this.pitch;
+        }
+
+        @Override
+        public float getXPosF()
+        {
+            return this.x;
+        }
+
+        @Override
+        public float getYPosF()
+        {
+            return this.y;
+        }
+
+        @Override
+        public float getZPosF()
+        {
+            return this.z;
+        }
+
+        @Override
+        public AttenuationType getAttenuationType()
+        {
+            return this.type;
+        }
     }
 }

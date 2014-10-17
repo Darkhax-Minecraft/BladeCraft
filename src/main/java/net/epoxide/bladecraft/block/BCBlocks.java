@@ -14,8 +14,8 @@ public class BCBlocks
     
     public static void initialize()
     {
-        forgeBlock = new BlockForge().setBlockName("blockForge").setCreativeTab(CreativeTabs.tabBlock);
-        mixerBlock = new BlockMixer().setBlockName("blockMixer").setCreativeTab(CreativeTabs.tabBlock);
+        forgeBlock = new BlockForge().setHardness(3.5F).setBlockName("blockForge").setCreativeTab(CreativeTabs.tabBlock);
+        mixerBlock = new BlockMixer().setHardness(3.5F).setBlockName("blockMixer").setCreativeTab(CreativeTabs.tabBlock);
         
         GameRegistry.registerBlock(forgeBlock, forgeBlock.getUnlocalizedName());
         GameRegistry.registerBlock(mixerBlock, mixerBlock.getUnlocalizedName());
