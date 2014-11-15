@@ -16,23 +16,23 @@ public class ConfigurationHandler {
     public static Property addDefaultSwords;
     public static String key = "Add default swords";
     
-    public ConfigurationHandler(File configFile) {
-
+    public static void initialize(File configFile) 
+    {
         config = new Configuration(configFile);
         addDefaultSwords = config.get(Configuration.CATEGORY_GENERAL, key, true);
-        FMLCommonHandler.instance().bus().register(this);
+        FMLCommonHandler.instance().bus().register(ConfigurationHandler.class);
         syncConfig();
     }
 
     @SubscribeEvent
-    public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
-
+    public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) 
+    {
         if (event.modID.equals(Reference.MOD_ID))
             syncConfig();
     }
 
-    private void syncConfig() {
-
+    private static void syncConfig() 
+    {
         if(config.get(Configuration.CATEGORY_GENERAL, key, true).getBoolean())
         {
             BladecraftUtilities.addSwordCreativeTab();

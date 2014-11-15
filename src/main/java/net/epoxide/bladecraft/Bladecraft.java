@@ -12,16 +12,20 @@ import net.epoxide.bladecraft.item.crafting.RGBEntry;
 import net.epoxide.bladecraft.network.NetworkManager;
 import net.epoxide.bladecraft.proxy.ProxyCommon;
 import net.epoxide.bladecraft.util.Reference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IWorldAccess;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -35,34 +39,30 @@ public class Bladecraft {
     public static ProxyCommon proxy;
 
     @Mod.Instance(Reference.MOD_ID)
-    public static Bladecraft instance;
-
-    public static SimpleNetworkWrapper networkChannels;
+    private static Bladecraft instance;
         
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) 
     {
         setModMeta(event.getModMetadata());
-        new ConfigurationHandler(event.getSuggestedConfigurationFile());
-        MinecraftForge.EVENT_BUS.register(new ToolTipEventHandler());
+        ConfigurationHandler.initialize(event.getSuggestedConfigurationFile());
         BCBlocks.initialize();
         BCItems.initialize();
         NetworkManager.initialize();
         
-        proxy.registerSidededEvents();
-        
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityForge.class, "BladeCraftForge");
         TileEntity.addMapping(net.epoxide.bladecraft.tileentity.TileEntityMixer.class, "BladeCraftMixer");
          
+        MinecraftForge.EVENT_BUS.register(new ToolTipEventHandler());
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
     }
     
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {        
+        proxy.registerSidedEvents();
         proxy.registerBlockItemRenderers();
-        RGBEntry entry = DyeableItems.getDyeComponentValue(new ItemStack(Items.dye, 1, 0));
-        System.err.println(String.format("Red: %f, Green: %f, Blue: %f", entry.getRed(), entry.getGreen(), entry.getBlue()));
+        RGBEntry entry = DyeableItems.getDyeComponentValue(new ItemStack(Items.dye, 1, 0));   
     }
     
     @EventHandler
@@ -74,7 +74,6 @@ public class Bladecraft {
 
     private void setModMeta(ModMetadata meta) 
     {
-        // TODO add more details
         meta.name = "Bladecraft";
         meta.modId = Reference.MOD_ID;
         meta.version = Reference.VERSION;
@@ -83,5 +82,10 @@ public class Bladecraft {
         meta.description = "A mod that provides the ability to color swords.";
         meta.logoFile = "";
         meta.url = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1288864-1-5-2-forge-bladecraft-ssp-smp-lan";
+    }
+    
+    public static Bladecraft instance()
+    {
+    	return instance;
     }
 }

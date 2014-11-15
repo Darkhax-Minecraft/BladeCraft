@@ -16,20 +16,24 @@ import net.epoxide.bladecraft.tileentity.TileEntityForge;
 import net.epoxide.bladecraft.tileentity.TileEntityMixer;
 import net.epoxide.bladecraft.util.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorldAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLLog;
 
 public class ProxyClient extends ProxyCommon
 {    
     @Override
-    public void registerSidededEvents() 
+    public void registerSidedEvents() 
     {
         // Modify Vanilla renders
         MinecraftForgeClient.registerItemRenderer(Items.wooden_sword, new RenderItemSword());
@@ -45,6 +49,8 @@ public class ProxyClient extends ProxyCommon
         
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForge.class, new TileEntityForgeRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMixer.class, new TileEntityMixerRenderer());
+        
+        
     }
     
     public void registerBlockItemRenderers()

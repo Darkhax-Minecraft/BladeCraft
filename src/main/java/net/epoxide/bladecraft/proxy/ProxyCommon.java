@@ -20,7 +20,7 @@ public class ProxyCommon implements IGuiHandler
 {
     public List<Item> dyeableItems = new ArrayList<Item>();
 
-    public void registerSidededEvents()
+    public void registerSidedEvents()
     {
 
     }

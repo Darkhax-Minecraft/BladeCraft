@@ -294,12 +294,15 @@ public class TileEntityMixer extends TileEntity implements ISidedInventory
         {
             ItemStack stack = applyDye(new ItemStack(BCItems.alloy, 1));
             mixerStacks[2] = stack;
-            mixerStacks[1] = null;
+            mixerStacks[1].stackSize--;
         }
         else
         {
             mixerStacks[2].stackSize++;
         }
+        
+        if(mixerStacks[1].stackSize <= 0)
+        	mixerStacks[1] = null;
     }
 
     private ItemStack applyDye(ItemStack itemStack)

@@ -33,6 +33,13 @@ public class ItemIconHandler
             
             alloyOverlay = event.map.registerIcon("bladecraft:overlay_alloy");
         }
+        System.err.println("Icon Registration occurring.");
+        try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public static TextureMap getTextureMap() 
