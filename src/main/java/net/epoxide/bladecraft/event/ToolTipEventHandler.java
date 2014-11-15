@@ -26,9 +26,9 @@ public class ToolTipEventHandler
             String insetColor = event.itemStack.stackTagCompound.getString(Reference.INSET_HEX_NBT_KEY);
           
             if(insetColor.equals("Unset"))
-                event.toolTip.add(1, "Inset Color: Unset");
+                event.toolTip.add(1, "Handle Color: Unset");
             else
-                event.toolTip.add(1, String.format("Inset Color: #%s", insetColor));
+                event.toolTip.add(1, String.format("Handle Color: #%s", insetColor));
             
             if(hiltColor.equals("Unset"))
                 event.toolTip.add(1, "Hilt Color: Unset");
